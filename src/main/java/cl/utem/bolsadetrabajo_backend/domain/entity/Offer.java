@@ -5,6 +5,8 @@ import cl.utem.bolsadetrabajo_backend.domain.entity.enums.WorkType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.LocalDateTime;
 
@@ -30,14 +32,20 @@ public class Offer extends BaseEntity {
 
   @Column(name = "work_type", nullable = false)
   @Enumerated(EnumType.STRING)
+  @JdbcType(PostgreSQLEnumJdbcType.class)
   private WorkType workType;
 
   @Column(name = "work_mode", nullable = false)
   @Enumerated(EnumType.STRING)
+  @JdbcType(PostgreSQLEnumJdbcType.class)
   private WorkMode workMode;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "offerLocation", nullable = false)
   private OfferLocation offerLocation;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "offer_author")
+  private UtemUser offerAuthor;
 
 }
