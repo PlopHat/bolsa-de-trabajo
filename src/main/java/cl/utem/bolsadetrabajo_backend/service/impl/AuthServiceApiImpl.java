@@ -7,10 +7,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceApiImpl implements AuthService {
+
+  @Override
   public AuthResponse login(AuthRequest authRequest) {
 
     return null;
   }
+
+  @Override
   public AuthResponse register(AuthRequest authRequest) {
 
     return null;

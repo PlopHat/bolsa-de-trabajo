@@ -28,4 +28,8 @@ public class OfferServiceApiImpl implements OfferService {
     return offerResponses;
   }
 
+  public OfferResponse getOfferById(Long id) {
+    return new OfferResponse().toDto(offerRepository.getOfferById(id));
+  }
+
 }

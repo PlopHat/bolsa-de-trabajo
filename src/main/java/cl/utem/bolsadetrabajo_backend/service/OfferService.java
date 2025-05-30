@@ -8,8 +8,8 @@ import java.util.List;
 @Service
 public interface OfferService {
   public List<OfferResponse> getOffers();
+  public OfferResponse getOfferById(Long id);
   // public OfferResponse createOffer();
-  // public OfferResponse getOfferById(Long id);
   // public OfferResponse updateOfferById(Long id);
   // public OfferResponse deleteOfferById(Long id);
 
