@@ -23,7 +23,7 @@ public class OfferLocation extends BaseEntity {
   @Column(name = "address", nullable = true)
   private String address;
 
-  @Column(name = "addressNumber", nullable = true)
+  @Column(name = "address_number", nullable = true)
   private String addressNumber;
 
 }
