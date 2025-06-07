@@ -39,7 +39,7 @@ public class ExperienceDto implements Serializable {
   @JsonProperty(value = "endDate")
   LocalDateTime endDate;
 
-  ExperienceDto toDto(Experience experience) {
+  public ExperienceDto toDto(Experience experience) {
     this.id = experience.getId();
     this.createdAt = experience.getCreatedAt();
     this.updatedAt = experience.getUpdatedAt();
