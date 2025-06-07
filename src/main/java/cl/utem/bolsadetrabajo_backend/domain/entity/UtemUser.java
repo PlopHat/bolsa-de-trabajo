@@ -12,7 +12,7 @@ import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 @Getter
 @Setter
 @Entity
-@Table(name = "utem_users")
+@Table(name = "app_users")
 public class UtemUser extends BaseEntity {
   @Column(name = "email", nullable = false, unique = true)
   @Email(message = "email address is not valid")
