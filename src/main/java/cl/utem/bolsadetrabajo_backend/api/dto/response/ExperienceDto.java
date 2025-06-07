@@ -1,5 +1,6 @@
 package cl.utem.bolsadetrabajo_backend.api.dto.response;
 
+import cl.utem.bolsadetrabajo_backend.domain.entity.Experience;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -37,4 +38,17 @@ public class ExperienceDto implements Serializable {
 
   @JsonProperty(value = "endDate")
   LocalDateTime endDate;
+
+  ExperienceDto toDto(Experience experience) {
+    this.id = experience.getId();
+    this.createdAt = experience.getCreatedAt();
+    this.updatedAt = experience.getUpdatedAt();
+    this.user = new UserResponse().toDto(experience.getUser());
+    this.companyName = experience.getCompanyName();
+    this.title = experience.getTitle();
+    this.description = experience.getDescription();
+    this.startDate = experience.getStartDate();
+    this.endDate = experience.getEndDate();
+    return this;
+  }
 }
