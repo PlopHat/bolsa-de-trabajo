@@ -15,7 +15,7 @@ public class OfferApplicationRequest {
 
   @JsonProperty(value = "requestDate")
   @NotNull(message = "requestDate must not be null")
-  private LocalDateTime RequestDate;
+  private LocalDateTime requestDate;
 
   @JsonProperty(value = "offerApplicationStatus")
   @NotNull(message = "offerApplicationStatus must not be null")

@@ -39,7 +39,7 @@ public class OfferApplicationDto implements Serializable {
   @NotNull(message = "offer application must have an application status")
   OfferApplicationStatus offerApplicationStatus;
 
-  OfferApplicationDto toDto(OfferApplication offerApplication) {
+  public OfferApplicationDto toDto(OfferApplication offerApplication) {
     this.id = offerApplication.getId();
     this.createdAt = offerApplication.getCreatedAt();
     this.updatedAt = offerApplication.getUpdatedAt();
