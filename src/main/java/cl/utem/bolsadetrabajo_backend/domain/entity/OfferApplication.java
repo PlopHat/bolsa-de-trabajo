@@ -23,7 +23,7 @@ public class OfferApplication extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "offer")
   @NotNull(message = "offer application must have an offer")
-  private Offer offerApplicationRequest;
+  private Offer offer;
 
   @Column(name = "application_request_date")
   @NotNull(message = "offer application must have an request date")

@@ -2,6 +2,7 @@ package cl.utem.bolsadetrabajo_backend.api.dto.request;
 
 import cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserRequest implements Serializable {
   @JsonProperty(value = "email")
+  @Email
   private String email;
 
   @JsonProperty(value = "password")
