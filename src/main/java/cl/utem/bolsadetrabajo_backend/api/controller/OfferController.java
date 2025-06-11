@@ -5,6 +5,7 @@ import cl.utem.bolsadetrabajo_backend.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +20,20 @@ public class OfferController {
   private OfferService offerService;
 
   @GetMapping(value = "")
+  @PreAuthorize(value =
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name()) or " +
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).COMPANY.name())") // Definir alcances de los roles
   public ResponseEntity<List<OfferResponse>> getAllOffers() {
 
     return ResponseEntity.status(HttpStatus.OK).body(offerService.getOffers());
   }
 
   @GetMapping(value = "{id}")
+  @PreAuthorize(value =
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name()) or " +
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).COMPANY.name())")
   public ResponseEntity<OfferResponse> getOfferById(
           @PathVariable("id") Long id) {
 
