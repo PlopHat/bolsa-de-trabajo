@@ -4,22 +4,27 @@ import cl.utem.bolsadetrabajo_backend.api.dto.request.OfferApplicationRequest;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferApplicationDto;
 import cl.utem.bolsadetrabajo_backend.domain.entity.Offer;
 import cl.utem.bolsadetrabajo_backend.domain.entity.OfferApplication;
+import cl.utem.bolsadetrabajo_backend.domain.entity.enums.OfferApplicationStatus;
 import cl.utem.bolsadetrabajo_backend.repository.OfferApplicationRepository;
+import cl.utem.bolsadetrabajo_backend.repository.OfferRepository;
 import cl.utem.bolsadetrabajo_backend.service.OfferApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OfferApplicationServiceApiImpl implements OfferApplicationService {
 
   @Autowired
   private OfferApplicationRepository offerApplicationRepository;
+  @Autowired
+  private OfferRepository offerRepository;
 
+  @Override
   public List<OfferApplicationDto> getOffers() {
     List<OfferApplication> offerApplications = offerApplicationRepository.findAll();
 
@@ -31,6 +36,7 @@ public class OfferApplicationServiceApiImpl implements OfferApplicationService {
     return responses;
   }
 
+  @Override
   public OfferApplicationDto getOfferById(Long id) {
     OfferApplication offerApplication = offerApplicationRepository.findById(id).orElse(null);
 
@@ -41,21 +47,52 @@ public class OfferApplicationServiceApiImpl implements OfferApplicationService {
     return new OfferApplicationDto().toDto(offerApplication);
   }
 
-  public OfferApplicationDto createOffer(OfferApplicationRequest request) {
+  @Override
+  public OfferApplicationDto createRequest(OfferApplicationRequest request) {
     // Validations
 
-    Optional<OfferApplication> offer = offerApplicationRepository.findById(request.getOfferId());
-    if (offer.isEmpty()) {
-      // manejar null
-      return null;
-    }
 
+    // Handle null using exception
+    Offer offer = offerRepository.findById(request.getOfferId()).orElse(null);
 
     OfferApplication offerApplication = new OfferApplication();
     // Get user from context when context is available
-    // offerApplication.setUser();
+    //  offerApplication.setUser();
 
-    offerApplication.setOfferApplicationRequest();
+      offerApplication.setOffer(offer);
+      offerApplication.setRequestDate(LocalDateTime.now());
+      offerApplication.setOfferApplicationStatus(OfferApplicationStatus.UNSEEN);
+
+    return new OfferApplicationDto().toDto(offerApplicationRepository.save(offerApplication));
+  }
+
+  @Override
+  public OfferApplicationDto updateRequest(OfferApplicationRequest request, Long id) {
+
+    // Validations
+
+    Offer offer = offerRepository.findById(id).orElse(null);
+    OfferApplication offerApplication = new OfferApplication();
+    offerApplication.setOfferApplicationStatus(request.getOfferApplicationStatus());
+
+    return new  OfferApplicationDto().toDto(offerApplicationRepository.save(offerApplication));
+  }
+
+  @Override
+  public Type deleteRequest(Long id) throws Exception {
+
+    // Validations
+
+    OfferApplication offerApplication = offerApplicationRepository.findById(id).orElse(null);
+
+    if (offerApplication != null) {
+      offerApplicationRepository.delete(offerApplication);
+    } else {
+
+      // handle null 'NotFoundException'
+      throw new Exception();
+    }
+
     return null;
   }
 

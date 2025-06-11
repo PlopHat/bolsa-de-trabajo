@@ -44,7 +44,7 @@ public class OfferApplicationDto implements Serializable {
     this.createdAt = offerApplication.getCreatedAt();
     this.updatedAt = offerApplication.getUpdatedAt();
     this.User = new UserResponse().toDto(offerApplication.getUser());
-    this.offerApplicationRequest = new OfferResponse().toDto(offerApplication.getOfferApplicationRequest());
+    this.offerApplicationRequest = new OfferResponse().toDto(offerApplication.getOffer());
     this.RequestDate = offerApplication.getRequestDate();
     this.offerApplicationStatus = offerApplication.getOfferApplicationStatus();
     return this;

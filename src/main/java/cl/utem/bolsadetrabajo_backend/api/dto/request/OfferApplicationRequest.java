@@ -13,12 +13,7 @@ public class OfferApplicationRequest {
   @NotNull(message = "offerId must not be null")
   private Long offerId;
 
-  @JsonProperty(value = "requestDate")
-  @NotNull(message = "requestDate must not be null")
-  private LocalDateTime requestDate;
-
   @JsonProperty(value = "offerApplicationStatus")
-  @NotNull(message = "offerApplicationStatus must not be null")
   private OfferApplicationStatus offerApplicationStatus;
 
 }
