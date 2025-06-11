@@ -2,11 +2,13 @@ package cl.utem.bolsadetrabajo_backend.api.controller;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.request.OfferApplicationRequest;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferApplicationDto;
+import cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles;
 import cl.utem.bolsadetrabajo_backend.service.OfferApplicationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,7 @@ public class OfferApplicationController {
   private OfferApplicationService offerApplicationService;
 
   @GetMapping(value = "")
+  @Secured("ROLE_" + UtemRoles.USER.name())
   public ResponseEntity<List<OfferApplicationDto>> getOfferApplications() {
 
     return ResponseEntity.status(HttpStatus.OK).body(offerApplicationService.getOffers());
