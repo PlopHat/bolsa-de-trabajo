@@ -1,5 +1,6 @@
 package cl.utem.bolsadetrabajo_backend.domain.exception;
 
+import cl.utem.bolsadetrabajo_backend.domain.exception.types.CustomEntityNotFoundException;
 import cl.utem.bolsadetrabajo_backend.domain.exception.types.ValidationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,13 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ProblemDetail> handleGlobalException(WebRequest req, Exception ex) {
     log.error("Error capturado <Exception> : ", ex);
     ProblemDetail problemDetail = makeWebRequestProblemDetail(req, HttpStatus.INTERNAL_SERVER_ERROR, ex);
+    return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
+  }
+
+  @ExceptionHandler(CustomEntityNotFoundException.class)
+  public ResponseEntity<ProblemDetail> handleCustomEntityNotFoundException(WebRequest req, Exception ex) {
+    log.error("Error capturado <CustomEntityNotFoundException> : ", ex);
+    ProblemDetail problemDetail = makeWebRequestProblemDetail(req, HttpStatus.BAD_REQUEST, ex);
     return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
   }
 

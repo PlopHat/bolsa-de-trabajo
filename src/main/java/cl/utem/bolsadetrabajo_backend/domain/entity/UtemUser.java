@@ -34,4 +34,8 @@ public class UtemUser extends BaseEntity {
   @JdbcType(PostgreSQLEnumJdbcType.class)
   private UtemRoles role;
 
+  @ManyToOne
+  @JoinColumn(name = "associated_company", nullable = true)
+  private Company company;
+
 }
