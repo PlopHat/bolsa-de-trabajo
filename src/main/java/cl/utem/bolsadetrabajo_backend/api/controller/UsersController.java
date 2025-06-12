@@ -5,6 +5,7 @@ import cl.utem.bolsadetrabajo_backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +21,18 @@ public class UsersController {
   private UserService userService;
 
   @GetMapping(value = "")
+  @PreAuthorize(value =
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name())")
   public ResponseEntity<List<UserResponse>> getAllUsers() {
 
     return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
   }
 
   @GetMapping(value = "{id}")
+  @PreAuthorize(value =
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
   public ResponseEntity<UserResponse> getUserById(
           @PathVariable Long id) {
 

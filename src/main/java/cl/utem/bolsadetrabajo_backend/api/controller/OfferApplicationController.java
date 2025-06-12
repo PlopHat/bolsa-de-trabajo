@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,20 +21,33 @@ public class OfferApplicationController {
   private OfferApplicationService offerApplicationService;
 
   @GetMapping(value = "")
+  @PreAuthorize(value =
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
   public ResponseEntity<List<OfferApplicationDto>> getOfferApplications() {
 
     return ResponseEntity.status(HttpStatus.OK).body(offerApplicationService.getOffers());
   }
 
+
   @GetMapping(value = "/{id}")
+  @PreAuthorize(value =
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
   public ResponseEntity<OfferApplicationDto> getOfferApplicationById(
-          @PathVariable(value = "id") Long id
+          @PathVariable(value = "id") Long id,
+          Authentication auth
   ) {
 
     return ResponseEntity.status(HttpStatus.OK).body(offerApplicationService.getOfferById(id));
   }
 
   @PostMapping(value = "")
+  @PreAuthorize(value =
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name())")
   public ResponseEntity<OfferApplicationDto> createOfferApplication(
           @Valid @RequestBody OfferApplicationRequest request
   ) {
@@ -41,6 +56,9 @@ public class OfferApplicationController {
   }
 
   @PutMapping(value = "{id}")
+  @PreAuthorize(value =
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name())")
   public ResponseEntity<OfferApplicationDto> updateOfferApplication(
           @PathVariable(value = "id") Long id,
           @RequestBody OfferApplicationRequest request

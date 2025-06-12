@@ -2,6 +2,7 @@ package cl.utem.bolsadetrabajo_backend.service;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.request.OfferApplicationRequest;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferApplicationDto;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
