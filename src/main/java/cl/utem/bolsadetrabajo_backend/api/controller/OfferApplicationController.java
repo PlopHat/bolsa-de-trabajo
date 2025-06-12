@@ -2,7 +2,6 @@ package cl.utem.bolsadetrabajo_backend.api.controller;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.request.OfferApplicationRequest;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferApplicationDto;
-import cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles;
 import cl.utem.bolsadetrabajo_backend.service.OfferApplicationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,9 @@ public class OfferApplicationController {
 
   @GetMapping(value = "")
   @PreAuthorize(value =
-          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
-          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name()) or " +
-          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).COMPANY.name())")
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
   public ResponseEntity<List<OfferApplicationDto>> getOfferApplications() {
 
     return ResponseEntity.status(HttpStatus.OK).body(offerApplicationService.getOffers());

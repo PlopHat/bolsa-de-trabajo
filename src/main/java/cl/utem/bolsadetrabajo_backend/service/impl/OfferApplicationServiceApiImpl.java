@@ -9,6 +9,7 @@ import cl.utem.bolsadetrabajo_backend.repository.OfferApplicationRepository;
 import cl.utem.bolsadetrabajo_backend.repository.OfferRepository;
 import cl.utem.bolsadetrabajo_backend.service.OfferApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
