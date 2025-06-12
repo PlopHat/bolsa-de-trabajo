@@ -21,9 +21,9 @@ public class OfferController {
 
   @GetMapping(value = "")
   @PreAuthorize(value =
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name()) or " +
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).COMPANY.name())") // Definir alcances de los roles
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())") // Definir alcances de los roles
   public ResponseEntity<List<OfferResponse>> getAllOffers() {
 
     return ResponseEntity.status(HttpStatus.OK).body(offerService.getOffers());
@@ -31,9 +31,9 @@ public class OfferController {
 
   @GetMapping(value = "{id}")
   @PreAuthorize(value =
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name()) or " +
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).COMPANY.name())")
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
   public ResponseEntity<OfferResponse> getOfferById(
           @PathVariable("id") Long id) {
 

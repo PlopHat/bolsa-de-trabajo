@@ -22,7 +22,7 @@ public class UsersController {
 
   @GetMapping(value = "")
   @PreAuthorize(value =
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name())")
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name())")
   public ResponseEntity<List<UserResponse>> getAllUsers() {
 
     return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
@@ -30,9 +30,9 @@ public class UsersController {
 
   @GetMapping(value = "{id}")
   @PreAuthorize(value =
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name()) or " +
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).COMPANY.name())")
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
   public ResponseEntity<UserResponse> getUserById(
           @PathVariable Long id) {
 

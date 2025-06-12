@@ -1,12 +1,8 @@
 package cl.utem.bolsadetrabajo_backend.domain.entity.enums;
 
 public enum UtemRoles {
-  USER,
-  COMPANY,
-  ADMINISTRATOR;
-
-  public String getRoleName() {
-    return "ROLE_" + this.name();
-  }
+  ROLE_USER,
+  ROLE_COMPANY,
+  ROLE_ADMINISTRATOR;
 
 }

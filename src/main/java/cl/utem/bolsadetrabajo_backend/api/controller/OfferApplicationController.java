@@ -22,10 +22,10 @@ public class OfferApplicationController {
   private OfferApplicationService offerApplicationService;
 
   @GetMapping(value = "")
-//  @PreAuthorize(value =
-//          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
-//          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name()) or " +
-//          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).COMPANY.name())")
+  @PreAuthorize(value =
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).COMPANY.name())")
   public ResponseEntity<List<OfferApplicationDto>> getOfferApplications() {
 
     return ResponseEntity.status(HttpStatus.OK).body(offerApplicationService.getOffers());
@@ -34,9 +34,9 @@ public class OfferApplicationController {
 
   @GetMapping(value = "/{id}")
   @PreAuthorize(value =
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name()) or " +
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).COMPANY.name())")
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
   public ResponseEntity<OfferApplicationDto> getOfferApplicationById(
           @PathVariable(value = "id") Long id,
           Authentication auth
@@ -47,8 +47,8 @@ public class OfferApplicationController {
 
   @PostMapping(value = "")
   @PreAuthorize(value =
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name())")
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name())")
   public ResponseEntity<OfferApplicationDto> createOfferApplication(
           @Valid @RequestBody OfferApplicationRequest request
   ) {
@@ -58,8 +58,8 @@ public class OfferApplicationController {
 
   @PutMapping(value = "{id}")
   @PreAuthorize(value =
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).USER.name()) or " +
-          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ADMINISTRATOR.name())")
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name())")
   public ResponseEntity<OfferApplicationDto> updateOfferApplication(
           @PathVariable(value = "id") Long id,
           @RequestBody OfferApplicationRequest request
