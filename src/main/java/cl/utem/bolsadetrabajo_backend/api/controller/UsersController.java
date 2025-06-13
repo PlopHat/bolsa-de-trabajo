@@ -2,6 +2,10 @@ package cl.utem.bolsadetrabajo_backend.api.controller;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.response.UserResponse;
 import cl.utem.bolsadetrabajo_backend.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +24,29 @@ public class UsersController {
   @Autowired
   private UserService userService;
 
+  /**
+   * Endpoint to get all users.
+   *
+   * @return ResponseEntity with a list of UserResponse
+   */
+  @Operation(
+          summary = "Obtener todos los usuarios",
+          description = "Retorna una lista de todos los usuarios registrados en el sistema."
+  )
+  @ApiResponses(value = {
+          @ApiResponse(
+                  responseCode = "200",
+                  description = "Lista de usuarios obtenida exitosamente"
+          ),
+          @ApiResponse(
+                  responseCode = "403",
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios"
+          )
+  })
+  @SecurityRequirement(
+          name = "bearerAuth",
+          scopes = {"read", "write"}
+  )
   @GetMapping(value = "")
   @PreAuthorize(value =
           "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name())")
@@ -28,6 +55,35 @@ public class UsersController {
     return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
   }
 
+  /**
+   * Endpoint to get a user by its ID.
+   *
+   * @param id the ID of the user
+   * @return ResponseEntity with UserResponse
+   */
+  @Operation(
+          summary = "Obtener usuario por ID",
+          description = "Retorna un usuario específico por su ID."
+  )
+
+  @ApiResponses(value = {
+          @ApiResponse(
+                  responseCode = "200",
+                  description = "Usuario obtenido exitosamente"
+          ),
+          @ApiResponse(
+                  responseCode = "403",
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios"
+          ),
+          @ApiResponse(
+                  responseCode = "404",
+                  description = "Usuario no encontrado"
+          )
+  })
+  @SecurityRequirement(
+          name = "bearerAuth",
+          scopes = {"read", "write"}
+  )
   @GetMapping(value = "{id}")
   @PreAuthorize(value =
           "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
