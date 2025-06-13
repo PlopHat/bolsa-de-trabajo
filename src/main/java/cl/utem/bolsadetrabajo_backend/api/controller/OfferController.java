@@ -2,6 +2,9 @@ package cl.utem.bolsadetrabajo_backend.api.controller;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferResponse;
 import cl.utem.bolsadetrabajo_backend.service.OfferService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,25 @@ public class OfferController {
   @Autowired
   private OfferService offerService;
 
+  /**
+   * Endpoint to get all offers.
+   *
+   * @return ResponseEntity with a list of OfferResponse
+   */
+  @Operation(
+          summary = "Obtener todas las ofertas",
+          description = "Retorna una lista de todas las ofertas disponibles."
+  )
+  @ApiResponses(value = {
+          @ApiResponse(
+                  responseCode = "200",
+                  description = "Lista de ofertas obtenida exitosamente"
+          ),
+          @ApiResponse(
+                  responseCode = "403",
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios"
+          )
+  })
   @GetMapping(value = "")
   @PreAuthorize(value =
           "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
@@ -29,6 +51,30 @@ public class OfferController {
     return ResponseEntity.status(HttpStatus.OK).body(offerService.getOffers());
   }
 
+  /**
+   * Endpoint to get an offer by its ID.
+   *
+   * @param id the ID of the offer
+   * @return ResponseEntity with OfferResponse
+   */
+  @Operation(
+          summary = "Obtener oferta por ID",
+          description = "Retorna una oferta específica por su ID."
+  )
+  @ApiResponses(value = {
+          @ApiResponse(
+                  responseCode = "200",
+                  description = "Oferta obtenida exitosamente"
+          ),
+          @ApiResponse(
+                  responseCode = "404",
+                  description = "Oferta no encontrada"
+          ),
+          @ApiResponse(
+                  responseCode = "403",
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios"
+          )
+  })
   @GetMapping(value = "{id}")
   @PreAuthorize(value =
           "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
