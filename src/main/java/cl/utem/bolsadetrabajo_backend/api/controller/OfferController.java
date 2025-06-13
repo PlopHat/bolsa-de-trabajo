@@ -48,7 +48,7 @@ public class OfferController {
           "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
           "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())") // Definir alcances de los roles
   public ResponseEntity<Page<OfferResponse>> getAllOffers(
-          @RequestParam PaginationQueriesDto queryParams,
+          @ModelAttribute PaginationQueriesDto queryParams,
           Authentication auth
   ) {
 
