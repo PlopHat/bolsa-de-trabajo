@@ -11,11 +11,10 @@ import cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles;
 import cl.utem.bolsadetrabajo_backend.repository.OfferRepository;
 import cl.utem.bolsadetrabajo_backend.repository.UtemUserRepository;
 import cl.utem.bolsadetrabajo_backend.service.OfferService;
+import cl.utem.bolsadetrabajo_backend.utils.PageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -37,15 +36,7 @@ public class OfferServiceApiImpl implements OfferService {
     // get User from Authentication
     UtemUser user = contextUtils.getUserFromContext(auth);
 
-    Sort sort = null;
-    if(queries.getSortBy()!=null) {
-      Sort.Direction direction = queries.getSortDirection() != null && queries.getSortDirection().equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-      sort = Sort.by(direction, queries.getSortBy());
-    }
-
-    Pageable pageable = sort != null ?
-            PageRequest.of(queries.getPage(), queries.getSize(), sort) : PageRequest.of(queries.getPage(), queries.getSize());
-
+    Pageable pageable = PageUtils.getPageable(queries);
     Page<Offer> offers;
     if(user.getRole() == UtemRoles.ROLE_ADMINISTRATOR) {
       offers = offerRepository.findAll(pageable);
@@ -59,17 +50,16 @@ public class OfferServiceApiImpl implements OfferService {
   }
 
   public OfferResponse getOfferById(Authentication auth, Long id) {
-
     // Get User from Authentication
     UtemUser user = contextUtils.getUserFromContext(auth);
     // Validations
     Offer offer = offerRepository.findById(id).orElseThrow(CustomEntityNotFoundException::new);
-    if(user.getCompany() != offer.getOfferAuthor().getCompany()) {
-      throw new ValidationException();
+    // this validation is only valid if not Administrator
+    if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && user.getCompany() != offer.getOfferAuthor().getCompany()) {
+      throw new ValidationException("invalid company: user does not share the same company as requested resource");
     }
 
     // Logic
-
     return new OfferResponse().toDto(offerRepository.getOfferById(id));
   }
 
