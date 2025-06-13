@@ -4,12 +4,15 @@ import cl.utem.bolsadetrabajo_backend.api.dto.request.OfferApplicationRequest;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferApplicationDto;
 import cl.utem.bolsadetrabajo_backend.service.OfferApplicationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -41,7 +44,8 @@ public class OfferApplicationController {
           ),
           @ApiResponse(
                   responseCode = "403",
-                  description = "Acceso denegado, el usuario no tiene los permisos necesarios"
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
           )
   })
   @SecurityRequirement(
@@ -78,11 +82,13 @@ public class OfferApplicationController {
           @ApiResponse(
                   responseCode = "403",
                   description = "Acceso denegado, el usuario no tiene los permisos necesarios" +
-                          "o no es de una compañía asociada a la oferta"
+                          "o no es de una compañía asociada a la oferta",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
           ),
           @ApiResponse(
                   responseCode = "404",
-                  description = "Postulación a oferta no encontrada"
+                  description = "Postulación a oferta no encontrada",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
           )
   })
   @SecurityRequirement(
@@ -120,7 +126,8 @@ public class OfferApplicationController {
           ),
           @ApiResponse(
                   responseCode = "403",
-                  description = "Acceso denegado, el usuario no tiene los permisos necesarios"
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
           )
   })
   @SecurityRequirement(
@@ -155,11 +162,13 @@ public class OfferApplicationController {
           ),
           @ApiResponse(
                   responseCode = "403",
-                  description = "Acceso denegado, el usuario no tiene los permisos necesarios"
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
           ),
           @ApiResponse(
                   responseCode = "404",
-                  description = "Postulación a oferta no encontrada"
+                  description = "Postulación a oferta no encontrada",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
           )
   })
   @SecurityRequirement(

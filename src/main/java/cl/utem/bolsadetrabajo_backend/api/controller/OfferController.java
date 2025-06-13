@@ -3,10 +3,13 @@ package cl.utem.bolsadetrabajo_backend.api.controller;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferResponse;
 import cl.utem.bolsadetrabajo_backend.service.OfferService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +41,8 @@ public class OfferController {
           ),
           @ApiResponse(
                   responseCode = "403",
-                  description = "Acceso denegado, el usuario no tiene los permisos necesarios"
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
           )
   })
   @GetMapping(value = "")
@@ -68,11 +72,13 @@ public class OfferController {
           ),
           @ApiResponse(
                   responseCode = "404",
-                  description = "Oferta no encontrada"
+                  description = "Oferta no encontrada",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
           ),
           @ApiResponse(
                   responseCode = "403",
-                  description = "Acceso denegado, el usuario no tiene los permisos necesarios"
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
           )
   })
   @GetMapping(value = "{id}")
