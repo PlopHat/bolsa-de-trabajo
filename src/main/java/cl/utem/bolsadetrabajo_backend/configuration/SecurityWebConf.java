@@ -48,7 +48,12 @@ public class SecurityWebConf {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Configura el manejo de sesiones
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(
-                            "/auth/**"
+                            "/auth/**",
+                            "/v3/api-docs/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/swagger-resources/**",
+                            "/webjars/**"
                     )
                     .permitAll() // Permitir acceso a rutas públicas
                     .anyRequest().authenticated() // Todas las demás requieren autenticación
