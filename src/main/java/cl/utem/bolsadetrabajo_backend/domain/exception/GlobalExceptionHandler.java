@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -26,60 +27,56 @@ public class GlobalExceptionHandler {
   private static final String URL_DETAILS = "https://http.cat/";
 
   @ExceptionHandler(ValidationException.class)
-  public ResponseEntity<ProblemDetail> handleEntityNotFoundException(WebRequest req, Exception ex) {
+  public ResponseEntity<ProblemDetail> handleEntityNotFoundException(HttpServletRequest req, ValidationException ex) {
     log.error("Error capturado <ValidationException> : ", ex);
-    ProblemDetail problemDetail = makeWebRequestProblemDetail(req, HttpStatus.UNPROCESSABLE_ENTITY, ex);
+    ProblemDetail problemDetail = makeServletRequestProblemDetail(req, HttpStatus.UNPROCESSABLE_ENTITY, ex);
     return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
   }
 
   @ExceptionHandler(AuthorizationDeniedException.class)
-  public ResponseEntity<ProblemDetail> handleAuthorizationDeniedException(WebRequest req, Exception ex) {
+  public ResponseEntity<ProblemDetail> handleAuthorizationDeniedException(HttpServletRequest req, AuthorizationDeniedException ex) {
     log.error("Error capturado <AuthorizationDeniedException> : ", ex);
-    ProblemDetail problemDetail = makeWebRequestProblemDetail(req, HttpStatus.UNAUTHORIZED, ex);
+    ProblemDetail problemDetail = makeServletRequestProblemDetail(req, HttpStatus.UNAUTHORIZED, ex);
     return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
   }
 
   @ExceptionHandler(UsernameNotFoundException.class)
-  public ResponseEntity<ProblemDetail> handleUsernameNotFoundException(WebRequest req, Exception ex) {
+  public ResponseEntity<ProblemDetail> handleUsernameNotFoundException(HttpServletRequest req, UsernameNotFoundException ex) {
     log.error("Error capturado <UsernameNotFoundException> : ", ex);
-    ProblemDetail problemDetail = makeWebRequestProblemDetail(req, HttpStatus.BAD_REQUEST, ex);
-    return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
-  }
-
-  @ExceptionHandler(DataIntegrityViolationException.class)
-  public ResponseEntity<ProblemDetail> handleDataIntegrityViolationException(WebRequest req, Exception ex) {
-    log.error("Error capturado <DataIntegrityViolationException> : ", ex);
-    ProblemDetail problemDetail = makeWebRequestProblemDetail(req, HttpStatus.BAD_REQUEST, ex);
+    ProblemDetail problemDetail = makeServletRequestProblemDetail(req, HttpStatus.BAD_REQUEST, ex);
     return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ProblemDetail> handleGlobalException(WebRequest req, Exception ex) {
+  public ResponseEntity<ProblemDetail> handleGlobalException(HttpServletRequest req, Exception ex) {
     log.error("Error capturado <Exception> : ", ex);
-    ProblemDetail problemDetail = makeWebRequestProblemDetail(req, HttpStatus.INTERNAL_SERVER_ERROR, ex);
+    ProblemDetail problemDetail = makeServletRequestProblemDetail(req, HttpStatus.INTERNAL_SERVER_ERROR, ex);
     return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
   }
 
   @ExceptionHandler(CustomEntityNotFoundException.class)
-  public ResponseEntity<ProblemDetail> handleCustomEntityNotFoundException(WebRequest req, Exception ex) {
+  public ResponseEntity<ProblemDetail> handleCustomEntityNotFoundException(HttpServletRequest req, CustomEntityNotFoundException ex) {
     log.error("Error capturado <CustomEntityNotFoundException> : ", ex);
-    ProblemDetail problemDetail = makeWebRequestProblemDetail(req, HttpStatus.BAD_REQUEST, ex);
+    ProblemDetail problemDetail = makeServletRequestProblemDetail(req, HttpStatus.BAD_REQUEST, ex);
     return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
   }
 
-  private static ProblemDetail makeWebRequestProblemDetail(WebRequest req,
-                                                           HttpStatus status, Exception ex) {
-    log.error("Generando problem detail <WebRequest> para : {}", ex.getMessage());
+  @ExceptionHandler(BadCredentialsException.class)
+  public ResponseEntity<ProblemDetail> handleBadCredentialsException(HttpServletRequest req, BadCredentialsException ex) {
+    log.error("Error capturado <BadCredentialsException> : ", ex);
+    ProblemDetail problemDetail = makeServletRequestProblemDetail(req, HttpStatus.BAD_REQUEST, ex);
+    return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ProblemDetail> handleDataIntegrityViolationException(HttpServletRequest req, DataIntegrityViolationException ex) {
+    log.error("Error capturado <DataIntegrityViolationException> : ", ex);
+    HttpStatus status = HttpStatus.BAD_REQUEST;
     final URI type = URI.create(URL_DETAILS + status.value());
-    final String detail = ex.getMessage();
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+    ProblemDetail problemDetail = ProblemDetail.forStatus(status);
     problemDetail.setType(type);
     problemDetail.setTitle(status.getReasonPhrase());
-    if (req != null) {
-      final URI instance = URI.create(req.getDescription(false));
-      problemDetail.setInstance(instance);
-    }
-    return problemDetail;
+    return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
   }
 
   private static ProblemDetail makeServletRequestProblemDetail(HttpServletRequest req,
@@ -101,14 +98,16 @@ public class GlobalExceptionHandler {
     return problemDetail;
   }
 
-  private ProblemDetail handleValidationException(MethodArgumentNotValidException ex,
-                                                  HttpStatus status, WebRequest req) {
-    log.error("Generando problem detail <ValidationException> para : {}", ex.getMessage());
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  protected ResponseEntity<ProblemDetail> handleMethodArgumentNotValid(WebRequest req, MethodArgumentNotValidException ex) {
+    log.error("Error capturado <MethodArgumentNotValidException> : ", ex);
+    HttpStatus status = HttpStatus.BAD_REQUEST;
     final URI type = URI.create(URL_DETAILS + status.value());
-    final String detail = "Error de validación";
-    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+    final String details = ex.getMessage();
+    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, details);
     problemDetail.setType(type);
     problemDetail.setTitle(status.getReasonPhrase());
+
     if (req != null) {
       final URI instance = URI.create(req.getDescription(false));
       problemDetail.setInstance(instance);
@@ -122,7 +121,8 @@ public class GlobalExceptionHandler {
             }
     );
     problemDetail.setProperty("errors", errorsMessages);
-    return problemDetail;
+
+    return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
   }
 
 }
