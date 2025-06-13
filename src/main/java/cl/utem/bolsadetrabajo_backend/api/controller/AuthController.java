@@ -57,8 +57,7 @@ public class AuthController {
   @ApiResponses({
           @ApiResponse(
                   responseCode = "200",
-                  description = "Autenticación exitosa",
-                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+                  description = "Autenticación exitosa"
           ),
           @ApiResponse(
                   responseCode = "401",
