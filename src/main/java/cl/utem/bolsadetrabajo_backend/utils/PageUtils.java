@@ -1,8 +1,6 @@
 package cl.utem.bolsadetrabajo_backend.utils;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.request.PaginationQueriesDto;
-import cl.utem.bolsadetrabajo_backend.domain.entity.Offer;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,7 +16,7 @@ public class PageUtils {
     }
 
     Pageable pageable = sort != null ?
-            PageRequest.of(queries.getPage(), queries.getSize(), sort) : PageRequest.of(queries.getPage(), queries.getSize());
+            PageRequest.of(queries.getPage(), queries.getPageSize(), sort) : PageRequest.of(queries.getPage(), queries.getPageSize());
     return pageable;
   }
 }

@@ -9,15 +9,15 @@ public class PaginationQueriesDto {
   private int page;
 
   @JsonProperty(value = "pageSize")
-  private int size;
+  private int pageSize;
 
   @JsonProperty(value = "offset")
   private int offset;
 
-  @JsonProperty(value = "orderBy")
+  @JsonProperty(value = "sortBy")
   private String sortBy;
 
-  @JsonProperty(value = "direction")
+  @JsonProperty(value = "sortDirection")
   private String sortDirection;
 
 }

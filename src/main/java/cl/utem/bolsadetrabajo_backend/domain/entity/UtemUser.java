@@ -34,6 +34,30 @@ public class UtemUser extends BaseEntity {
   @JdbcType(PostgreSQLEnumJdbcType.class)
   private UtemRoles role;
 
+  @Column(name = "rut", nullable = false, unique = true, length = 8)
+  private int rut;
+
+  @Column(name = "digito_verificador", nullable = false, length = 1)
+  private String DV;
+
+  public void setRut(int rut) {
+    this.rut = rut;
+    this.DV = calculateDV(rut);
+  }
+
+  // calculate the digito verificador for a given rut
+  private String calculateDV(int rut) {
+    int sum = 0;
+    int factor = 2;
+    while (rut > 0) {
+      sum += (rut % 10) * factor;
+      rut /= 10;
+      factor = (factor == 7) ? 2 : factor + 1;
+    }
+    int remainder = sum % 11;
+    return (remainder == 0) ? "0" : (remainder == 1) ? "K" : String.valueOf(11 - remainder);
+  }
+
   @ManyToOne
   @JoinColumn(name = "associated_company", nullable = true)
   private Company company;
