@@ -57,6 +57,7 @@ public class AuthServiceApiImpl implements AuthService {
         newUser.setEmail(request.getEmail().toLowerCase());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
         newUser.setName(request.getName());
+        newUser.setRut(request.getRut());
         newUser.setRole(UtemRoles.ROLE_USER);
 
       String jwtToken = jwtService.generateToken(new CustomUserDetailsObject(utemUserRepository.save(newUser)));
