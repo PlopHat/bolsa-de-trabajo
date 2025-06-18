@@ -1,21 +1,28 @@
 package cl.utem.bolsadetrabajo_backend.service.impl;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.request.OfferApplicationRequest;
+import cl.utem.bolsadetrabajo_backend.api.dto.request.PaginationQueriesDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferApplicationDto;
 import cl.utem.bolsadetrabajo_backend.domain.entity.Offer;
 import cl.utem.bolsadetrabajo_backend.domain.entity.OfferApplication;
+import cl.utem.bolsadetrabajo_backend.domain.entity.UtemUser;
 import cl.utem.bolsadetrabajo_backend.domain.entity.enums.OfferApplicationStatus;
+import cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles;
+import cl.utem.bolsadetrabajo_backend.domain.exception.types.CustomEntityNotFoundException;
+import cl.utem.bolsadetrabajo_backend.domain.exception.types.ValidationException;
 import cl.utem.bolsadetrabajo_backend.repository.OfferApplicationRepository;
 import cl.utem.bolsadetrabajo_backend.repository.OfferRepository;
 import cl.utem.bolsadetrabajo_backend.service.OfferApplicationService;
+import cl.utem.bolsadetrabajo_backend.utils.ContextUtils;
+import cl.utem.bolsadetrabajo_backend.utils.PageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class OfferApplicationServiceApiImpl implements OfferApplicationService {
@@ -24,42 +31,51 @@ public class OfferApplicationServiceApiImpl implements OfferApplicationService {
   private OfferApplicationRepository offerApplicationRepository;
   @Autowired
   private OfferRepository offerRepository;
+  @Autowired
+  private ContextUtils contextUtils;
 
   @Override
-  public List<OfferApplicationDto> getOffers() {
-    List<OfferApplication> offerApplications = offerApplicationRepository.findAll();
+  public Page<OfferApplicationDto> getOffersApplications(Authentication auth, PaginationQueriesDto queries) {
+    UtemUser user = contextUtils.getUserFromContext(auth);
+    Pageable page = PageUtils.getPageable(queries);
 
-    List<OfferApplicationDto> responses = new ArrayList<>();
-    for (OfferApplication offerApplication : offerApplications) {
-      responses.add(new OfferApplicationDto().toDto(offerApplication));
+    Page<OfferApplication> offerApplications;
+    if(user.getRole() == UtemRoles.ROLE_COMPANY) {
+      offerApplications = offerApplicationRepository.findAllByOffer_OfferAuthor_Company(user.getCompany(), page);
+    } else if (user.getRole() == UtemRoles.ROLE_USER) {
+      offerApplications = offerApplicationRepository.findAllByUser(user, page);
+    } else {
+      offerApplications = offerApplicationRepository.findAll(page);
     }
 
-    return responses;
+    return offerApplications.map(offerApplication -> new OfferApplicationDto().toDto(offerApplication));
   }
 
   @Override
-  public OfferApplicationDto getOfferById(Long id) {
-    OfferApplication offerApplication = offerApplicationRepository.findById(id).orElse(null);
+  public OfferApplicationDto getOfferApplicationsById(Authentication auth, Long id) {
+    UtemUser user = contextUtils.getUserFromContext(auth);
+    OfferApplication offerApplication = offerApplicationRepository.findById(id).orElseThrow(CustomEntityNotFoundException::new);
 
-    if (offerApplication == null) {
-      return null;
+    if(user.getRole() == UtemRoles.ROLE_COMPANY && !offerApplication.getOffer().getOfferAuthor().getCompany().equals(user.getCompany())) {
+      throw new ValidationException("invalid company: user does not share the same company as requested resource");
+    } else if (user.getRole() == UtemRoles.ROLE_USER && !offerApplication.getUser().equals(user)) {
+      throw new ValidationException("invalid user: user did not made the requested resource");
     }
 
     return new OfferApplicationDto().toDto(offerApplication);
   }
 
   @Override
-  public OfferApplicationDto createRequest(OfferApplicationRequest request) {
+  public OfferApplicationDto createOfferApplication(Authentication auth, OfferApplicationRequest request) {
+    UtemUser user = contextUtils.getUserFromContext(auth);
     // Validations
-
 
     // Handle null using exception
     Offer offer = offerRepository.findById(request.getOfferId()).orElse(null);
 
     OfferApplication offerApplication = new OfferApplication();
     // Get user from context when context is available
-    //  offerApplication.setUser();
-
+      offerApplication.setUser(user);
       offerApplication.setOffer(offer);
       offerApplication.setRequestDate(LocalDateTime.now());
       offerApplication.setOfferApplicationStatus(OfferApplicationStatus.UNSEEN);
@@ -68,19 +84,21 @@ public class OfferApplicationServiceApiImpl implements OfferApplicationService {
   }
 
   @Override
-  public OfferApplicationDto updateRequest(OfferApplicationRequest request, Long id) {
+  public OfferApplicationDto updateOfferApplication(Authentication auth, OfferApplicationRequest request, Long id) {
 
     // Validations
 
-    Offer offer = offerRepository.findById(id).orElse(null);
-    OfferApplication offerApplication = new OfferApplication();
-    offerApplication.setOfferApplicationStatus(request.getOfferApplicationStatus());
 
-    return new  OfferApplicationDto().toDto(offerApplicationRepository.save(offerApplication));
+
+    // logic
+    OfferApplication offer = offerApplicationRepository.findById(id).orElseThrow(CustomEntityNotFoundException::new);
+    offer.setOfferApplicationStatus(request.getOfferApplicationStatus());
+
+    return new OfferApplicationDto().toDto(offerApplicationRepository.save(offer));
   }
 
   @Override
-  public Type deleteRequest(Long id) throws Exception {
+  public Type deleteRequest(Authentication auth, Long id) throws Exception {
 
     // Validations
 

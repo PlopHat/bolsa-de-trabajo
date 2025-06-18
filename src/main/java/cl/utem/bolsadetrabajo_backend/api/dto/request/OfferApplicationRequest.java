@@ -20,7 +20,7 @@ public class OfferApplicationRequest {
   @JsonProperty(value = "offerApplicationStatus")
   @Schema(
     description = "The status of the offer application",
-    example = "PENDING",
+    example = "UNSEEN",
     requiredMode = Schema.RequiredMode.NOT_REQUIRED
   )
   private OfferApplicationStatus offerApplicationStatus;
