@@ -105,15 +105,21 @@ public class OfferServiceApiImpl implements OfferService {
   public OfferResponse createOffer(Authentication auth, OfferRequestDto req) {
     // Get User from Authentication
     UtemUser user = contextUtils.getUserFromContext(auth);
+
+    if(user.getCompany() == null && user.getRole() != UtemRoles.ROLE_ADMINISTRATOR) {
+      throw new ValidationException("invalid company: user does not have company");
+    }
+
     UtemUser offerAuthor = utemUserRepository.findById(req.getOfferAuthorId())
         .orElseThrow(() -> new CustomEntityNotFoundException("Offer author not found"));
-    OfferLocation offerLocation = offerLocationRepository.findById(req.getOfferLocationId())
-        .orElseThrow(() -> new CustomEntityNotFoundException("Offer location not found"));
 
     // Validations
-    if(user.getRole() == UtemRoles.ROLE_ADMINISTRATOR || user.getCompany() != null) {
+    if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && offerAuthor.getCompany() != user.getCompany()) {
       throw new ValidationException("invalid company: user does not share the same company as requested resource");
     }
+
+    OfferLocation offerLocation = offerLocationRepository.findById(req.getOfferLocationId())
+        .orElseThrow(() -> new CustomEntityNotFoundException("Location not found"));
 
     // Logic
     Offer offer = new Offer();
