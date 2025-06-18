@@ -43,29 +43,16 @@ public class OfferServiceApiImpl implements OfferService {
 
     Pageable pageable = PageUtils.getPageable(queries);
     Page<Offer> offers;
-    if(user.getRole() == UtemRoles.ROLE_ADMINISTRATOR) {
-      offers = offerRepository.findAll(pageable);
-    } else {
-      // FindAllByCompany(of user in context)
-      offers = offerRepository.findAllByOfferAuthor_Company(user.getCompany(), pageable);
-    }
+    offers = offerRepository.findAll(pageable);
 
     return offers.map(offer -> new OfferResponse().toDto(offer));
   }
 
   @Override
   public OfferResponse getOfferById(Authentication auth, Long id) {
-    // Get User from Authentication
-    UtemUser user = contextUtils.getUserFromContext(auth);
-    // Validations
     Offer offer = offerRepository.findById(id).orElseThrow(CustomEntityNotFoundException::new);
-    // this validation is only valid if not Administrator
-    if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && user.getCompany() != offer.getOfferAuthor().getCompany()) {
-      throw new ValidationException("invalid company: user does not share the same company as requested resource");
-    }
-
     // Logic
-    return new OfferResponse().toDto(offerRepository.getOfferById(id));
+    return new OfferResponse().toDto(offer);
   }
 
   @Override
@@ -124,7 +111,7 @@ public class OfferServiceApiImpl implements OfferService {
         .orElseThrow(() -> new CustomEntityNotFoundException("Offer location not found"));
 
     // Validations
-    if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && user.getCompany() != offerAuthor.getCompany()) {
+    if(user.getRole() == UtemRoles.ROLE_ADMINISTRATOR || user.getCompany() != null) {
       throw new ValidationException("invalid company: user does not share the same company as requested resource");
     }
 
@@ -151,7 +138,7 @@ public class OfferServiceApiImpl implements OfferService {
         .orElseThrow(() -> new CustomEntityNotFoundException("Offer not found"));
 
     // Validations
-    if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && offer.getOfferAuthor() != user ) {
+    if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && offer.getOfferAuthor().getCompany() != user.getCompany() ) {
       throw new ValidationException("invalid company: user does not share the same company as requested resource");
     }
 
