@@ -1,5 +1,6 @@
 package cl.utem.bolsadetrabajo_backend.api.controller;
 
+import cl.utem.bolsadetrabajo_backend.api.dto.request.OfferRequestDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.request.PaginationQueriesDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferResponse;
 import cl.utem.bolsadetrabajo_backend.service.OfferService;
@@ -8,17 +9,15 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "api/offers")
@@ -94,5 +93,57 @@ public class OfferController {
           @PathVariable("id") Long id) {
 
     return ResponseEntity.status(HttpStatus.OK).body(offerService.getOfferById(auth ,id));
+  }
+
+  @Operation(
+          summary = "Crear una oferta laboral",
+          description = "Crea una oferta laboral dado el schema provisto"
+  )
+  @ApiResponses(value = {
+          @ApiResponse(
+                  responseCode = "200",
+                  description = "Oferta creada satisfactoriamente"
+          ),
+          @ApiResponse(
+                  responseCode = "403",
+                  description = "No autorizado",
+                  content =  @Content(schema = @Schema(implementation = ProblemDetail.class))
+          )
+  })
+  @PostMapping(value = "")
+  @PreAuthorize(value =
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
+  public ResponseEntity<OfferResponse> createOffer(
+          Authentication auth,
+          @Valid @RequestBody OfferRequestDto request
+  ) {
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(offerService.createOffer(auth, request));
+  }
+
+  @Operation(
+          summary = "Actualiza una oferta laboral",
+          description = "Actualiza una oferta laboral dado el schema provisto"
+  )
+  @ApiResponses(value = {
+          @ApiResponse(
+                  responseCode = "200",
+                  description = "Oferta creada satisfactoriamente"
+          ),
+          @ApiResponse(
+                  responseCode = "403",
+                  description = "No autorizado",
+                  content =  @Content(schema = @Schema(implementation = ProblemDetail.class))
+          )
+  })
+  @PutMapping(value = "{id}")
+  public  ResponseEntity<OfferResponse> updateOffer(
+          Authentication auth,
+          @PathVariable(value = "id") Long id,
+          @RequestBody OfferRequestDto request
+  ) {
+
+    return ResponseEntity.status(HttpStatus.OK).body(offerService.updateOffer(auth, id, request));
   }
 }
