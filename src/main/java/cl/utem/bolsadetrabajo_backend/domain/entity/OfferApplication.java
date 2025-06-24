@@ -18,7 +18,7 @@ public class OfferApplication extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "appliant_user")
   @NotNull(message = "user must exist on an offer application")
-  private UtemUser User;
+  private UtemUser user;
 
   @ManyToOne
   @JoinColumn(name = "offer")
@@ -27,7 +27,7 @@ public class OfferApplication extends BaseEntity {
 
   @Column(name = "application_request_date")
   @NotNull(message = "offer application must have an request date")
-  private LocalDateTime RequestDate;
+  private LocalDateTime requestDate;
 
   @Column(name = "application_status")
   @JdbcType(PostgreSQLEnumJdbcType.class)
