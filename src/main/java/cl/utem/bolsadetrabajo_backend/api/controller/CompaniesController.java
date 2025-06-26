@@ -1,10 +1,10 @@
 package cl.utem.bolsadetrabajo_backend.api.controller;
+
 import cl.utem.bolsadetrabajo_backend.api.dto.request.CompanyRequestDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.request.PaginationQueriesDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.CompanyDto;
 import cl.utem.bolsadetrabajo_backend.service.CompanyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -57,7 +57,7 @@ public class CompaniesController {
           @RequestBody CompanyRequestDto req
   ) {
 
-
+    return null;
   }
 
 }
