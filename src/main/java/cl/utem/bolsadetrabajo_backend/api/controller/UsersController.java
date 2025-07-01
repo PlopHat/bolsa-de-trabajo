@@ -1,5 +1,6 @@
 package cl.utem.bolsadetrabajo_backend.api.controller;
 
+import cl.utem.bolsadetrabajo_backend.api.dto.request.UserRequest;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.UserResponse;
 import cl.utem.bolsadetrabajo_backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,10 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -99,6 +98,46 @@ public class UsersController {
           @PathVariable Long id) {
 
     return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
+  }
+
+  /**
+   * Endpoint to create a new user.
+   *
+   * @param auth the authentication object
+   * @param userRequest the request body containing user details
+   * @return ResponseEntity with UserResponse
+   */
+  @Operation(
+          summary = "Crear un nuevo usuario",
+          description = "Crea un nuevo usuario en el sistema."
+  )
+  @ApiResponses(value = {
+          @ApiResponse(
+                  responseCode = "201",
+                  description = "Usuario creado exitosamente"
+          ),
+          @ApiResponse(
+                  responseCode = "400",
+                  description = "Solicitud incorrecta, datos del usuario no válidos",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+          ),
+          @ApiResponse(
+                  responseCode = "403",
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+          )
+  })
+  @PreAuthorize(value =
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name())"
+  )
+  @PostMapping(value = "")
+  public ResponseEntity<UserResponse> createUser(
+          Authentication auth,
+          @RequestBody UserRequest userRequest
+  ) {
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+            .body(userService.createUser(auth, userRequest));
   }
 
 }
