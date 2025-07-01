@@ -10,6 +10,7 @@ import cl.utem.bolsadetrabajo_backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class UserServiceApiImpl implements UserService {
   private UtemUserRepository userRepository;
   @Autowired
   private CompanyRepository companyRepository;
+  @Autowired
+  private BCryptPasswordEncoder passwordEncoder;
 
   @Override
   public List<UserResponse> getAllUsers() {
@@ -49,7 +52,7 @@ public class UserServiceApiImpl implements UserService {
     user.setName(req.getName());
     user.setLastname(req.getLastName());
     user.setEmail(req.getEmail());
-    user.setPassword(req.getPassword());
+    user.setPassword(passwordEncoder.encode(req.getPassword()));
     user.setRole(req.getRole());
     if(company != null) {
       user.setCompany(company);
