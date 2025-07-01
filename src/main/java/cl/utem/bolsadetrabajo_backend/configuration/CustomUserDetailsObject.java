@@ -1,6 +1,7 @@
 package cl.utem.bolsadetrabajo_backend.configuration;
 
 import cl.utem.bolsadetrabajo_backend.domain.entity.UtemUser;
+import cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,11 +15,19 @@ public class CustomUserDetailsObject implements UserDetails {
 
   private String username;
   private String password;
+  private UtemRoles role;
+  private Long id;
+  private String name;
+  private String lastname;
   private List<GrantedAuthority> authorities;
 
   public CustomUserDetailsObject(UtemUser user) {
     this.username = user.getEmail();
     this.password = user.getPassword();
+    this.id = user.getId();
+    this.role = user.getRole();
+    this.name = user.getName();
+    this.lastname = user.getLastname();
     this.authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
   }
 
