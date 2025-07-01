@@ -1,5 +1,6 @@
 package cl.utem.bolsadetrabajo_backend.service.impl;
 
+import cl.utem.bolsadetrabajo_backend.configuration.CustomUserDetailsObject;
 import cl.utem.bolsadetrabajo_backend.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -55,8 +56,14 @@ public class JwtServiceImpl implements JwtService {
    * @return el token JWT generado
    */
   @Override
-  public String generateToken(UserDetails userDetails) {
-    return generateToken(new HashMap<>(), userDetails);
+  public String generateToken(CustomUserDetailsObject userDetails) {
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("id", userDetails.getId());
+    claims.put("role", userDetails.getRole());
+    claims.put("name", userDetails.getName());
+    claims.put("lastname", userDetails.getLastname());
+
+    return generateToken(claims, userDetails);
   }
 
   /**
@@ -67,7 +74,7 @@ public class JwtServiceImpl implements JwtService {
    * @return el token JWT generado
    */
   @Override
-  public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+  public String generateToken(Map<String, Object> extraClaims, CustomUserDetailsObject userDetails) {
     return buildToken(extraClaims, userDetails, jwtExpiration);
   }
 

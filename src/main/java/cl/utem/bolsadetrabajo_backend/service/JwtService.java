@@ -1,5 +1,6 @@
 package cl.utem.bolsadetrabajo_backend.service;
 
+import cl.utem.bolsadetrabajo_backend.configuration.CustomUserDetailsObject;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,9 +12,9 @@ public interface JwtService {
 
   public <T> T extractClaim(String token, Function<Claims, T> claimsResolver);
 
-  public String generateToken(UserDetails userDetails);
+  public String generateToken(CustomUserDetailsObject userDetails);
 
-  public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails);
+  public String generateToken(Map<String, Object> extraClaims, CustomUserDetailsObject userDetails);
 
   public long getExpirationTime();
 
