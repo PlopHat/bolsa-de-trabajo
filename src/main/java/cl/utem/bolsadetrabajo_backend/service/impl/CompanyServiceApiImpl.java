@@ -2,7 +2,7 @@ package cl.utem.bolsadetrabajo_backend.service.impl;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.request.CompanyRequestDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.request.PaginationQueriesDto;
-import cl.utem.bolsadetrabajo_backend.api.dto.response.CompanyDto;
+import cl.utem.bolsadetrabajo_backend.api.dto.response.CompanyResponseDto;
 import cl.utem.bolsadetrabajo_backend.domain.entity.Company;
 import cl.utem.bolsadetrabajo_backend.repository.CompanyRepository;
 import cl.utem.bolsadetrabajo_backend.service.CompanyService;
@@ -21,29 +21,29 @@ public class CompanyServiceApiImpl implements CompanyService {
   private CompanyRepository companyRepository;
 
   @Override
-  public Page<CompanyDto> getCompanies(Authentication auth, PaginationQueriesDto queries) {
+  public Page<CompanyResponseDto> getCompanies(Authentication auth, PaginationQueriesDto queries) {
     Pageable page = PageUtils.getPageable(queries);
 
     Page<Company> company = companyRepository.findAll(page);
 
-    return company.map(companyToDto -> new CompanyDto().toDto(companyToDto));
+    return company.map(companyToDto -> new CompanyResponseDto().toDto(companyToDto));
   }
 
   @Override
-  public CompanyDto getCompany(Authentication auth, int rut) {
+  public CompanyResponseDto getCompany(Authentication auth, String rut) {
     Company company = companyRepository.getCompanyByRut(rut);
 
-    return new CompanyDto().toDto(company);
+    return new CompanyResponseDto().toDto(company);
   }
 
   @Override
-  public CompanyDto createCompany(Authentication auth, @Valid CompanyRequestDto req) {
+  public CompanyResponseDto createCompany(Authentication auth, @Valid CompanyRequestDto req) {
     Company company = new Company();
 
     company.setRut(req.getRut());
     company.setFantasyName(req.getFantasyName());
 
-    return new CompanyDto().toDto(companyRepository.save(company));
+    return new CompanyResponseDto().toDto(companyRepository.save(company));
   }
 
 }

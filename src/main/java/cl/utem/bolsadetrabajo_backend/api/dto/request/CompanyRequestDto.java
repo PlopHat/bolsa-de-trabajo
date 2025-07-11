@@ -2,7 +2,7 @@ package cl.utem.bolsadetrabajo_backend.api.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -10,21 +10,22 @@ import lombok.Data;
  */
 @Data
 public class CompanyRequestDto {
+
   @JsonProperty(value = "rut")
-  @NotNull
+  @NotBlank
   @Schema(
-      description = "RUT de la empresa",
-      example = "12345678-9",
-      requiredMode = Schema.RequiredMode.REQUIRED
+          description = "RUT de la empresa con o sin puntos (formato: 12345678-9 o 12.345.678-9)",
+          example = "12.345.678-9",
+          requiredMode = Schema.RequiredMode.REQUIRED
   )
-  int rut;
+  private String rut;
 
   @JsonProperty(value = "companyName")
-  @NotNull
+  @NotBlank
   @Schema(
-      description = "Nombre de la empresa",
-      example = "Empresa S.A.",
-      requiredMode = Schema.RequiredMode.REQUIRED
+          description = "Nombre de fantasía de la empresa",
+          example = "Empresa S.A.",
+          requiredMode = Schema.RequiredMode.REQUIRED
   )
-  String fantasyName;
+  private String fantasyName;
 }

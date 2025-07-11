@@ -55,10 +55,10 @@ public class UserRequest implements Serializable {
   @JsonProperty(value = "companyRut")
   @Schema(
           description = "Rut de la empresa asociada al usuario",
-          example = "99999999",
+          example = "99999999-9",
           requiredMode = Schema.RequiredMode.NOT_REQUIRED
   )
-  private int companyRut;
+  private String companyRut;
 
   @JsonProperty(value = "role")
   @Schema(

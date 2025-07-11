@@ -95,6 +95,57 @@ public class OfferController {
     return ResponseEntity.status(HttpStatus.OK).body(offerService.getOfferById(auth ,id));
   }
 
+  @GetMapping(value = "{offerId}/applications")
+  @PreAuthorize(value =
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
+  public ResponseEntity<Page<OfferResponse>> getOfferApplications(
+          Authentication auth,
+          @PathVariable("offerId") Long offerId,
+          @ModelAttribute PaginationQueriesDto queryParams
+  ) {
+
+    return null;
+    //return ResponseEntity.status(HttpStatus.OK).body(offerService.getOfferApplications(auth, offerId, queryParams));
+  }
+
+  @Operation(
+          summary = "Obtener una postulación a oferta por ID",
+          description = "Retorna una postulación a oferta específica por su ID y usuario. " +
+                  "El usuario debe tener los permisos necesarios para acceder a esta información."
+  )
+  @ApiResponses(value = {
+          @ApiResponse(
+                  responseCode = "200",
+                  description = "Postulación a oferta obtenida exitosamente"
+          ),
+          @ApiResponse(
+                  responseCode = "403",
+                  description = "Acceso denegado, el usuario no tiene los permisos necesarios" +
+                          "o no es de una compañía asociada a la oferta",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+          ),
+          @ApiResponse(
+                  responseCode = "404",
+                  description = "Postulación a oferta no encontrada",
+                  content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+          )
+  })
+  @GetMapping(value = "{offerId}/applications/{userId}")
+  @PreAuthorize(value =
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())"
+  )
+  public ResponseEntity<OfferResponse> getOfferApplicationById(
+          Authentication auth,
+          @PathVariable("offerId") Long offerId,
+          @PathVariable("userId") Long userId
+  ) {
+
+    return null;
+    //return ResponseEntity.status(HttpStatus.OK).body(offerService.getOfferApplicationById(auth, offerId, userId));
+  }
+
   @Operation(
           summary = "Crear una oferta laboral",
           description = "Crea una oferta laboral dado el schema provisto"

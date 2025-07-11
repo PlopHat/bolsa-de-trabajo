@@ -2,7 +2,7 @@ package cl.utem.bolsadetrabajo_backend.api.controller;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.request.CompanyRequestDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.request.PaginationQueriesDto;
-import cl.utem.bolsadetrabajo_backend.api.dto.response.CompanyDto;
+import cl.utem.bolsadetrabajo_backend.api.dto.response.CompanyResponseDto;
 import cl.utem.bolsadetrabajo_backend.service.CompanyService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class CompaniesController {
   private CompanyService companyService;
 
   @GetMapping(value = "")
-  public ResponseEntity<Page<CompanyDto>> getCompanies(
+  public ResponseEntity<Page<CompanyResponseDto>> getCompanies(
           Authentication auth,
           @ModelAttribute PaginationQueriesDto queries
           ) {
@@ -33,9 +33,9 @@ public class CompaniesController {
   }
 
   @GetMapping(value = "{rut}")
-  public ResponseEntity<CompanyDto> getCompany(
+  public ResponseEntity<CompanyResponseDto> getCompany(
           Authentication auth,
-          @PathVariable("rut") int id
+          @PathVariable("rut") String id
   ) {
 
 
@@ -43,7 +43,7 @@ public class CompaniesController {
   }
 
   @PostMapping(value = "")
-  public ResponseEntity<CompanyDto> createCompany(
+  public ResponseEntity<CompanyResponseDto> createCompany(
           Authentication auth,
           @RequestBody CompanyRequestDto req
   ) {
@@ -52,7 +52,7 @@ public class CompaniesController {
   }
 
   @PutMapping(value = "")
-  public ResponseEntity<CompanyDto> updateCompany(
+  public ResponseEntity<CompanyResponseDto> updateCompany(
           Authentication auth,
           @RequestBody CompanyRequestDto req
   ) {
