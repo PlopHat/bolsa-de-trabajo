@@ -22,37 +22,30 @@ public class OfferRequestDto {
   String offerDescription;
 
   @JsonProperty(value = "startDate")
-  @NotEmpty
   @NotNull
   LocalDateTime startDate;
 
   @JsonProperty(value = "endDate")
-  @NotEmpty
   @NotNull
   LocalDateTime endDate;
 
   @JsonProperty(value = "salary")
-  @NotEmpty
   @NotNull
   Double salary;
 
   @JsonProperty(value = "workType")
-  @NotEmpty
   @NotNull
   WorkType workType;
 
   @JsonProperty(value = "workMode")
-  @NotEmpty
   @NotNull
   WorkMode workMode;
 
   @JsonProperty(value = "offerLocationId")
-  @NotEmpty
   @NotNull
   Long offerLocationId;
 
   @JsonProperty(value = "offerAuthorId")
-  @NotEmpty
   @NotNull
   Long offerAuthorId;
 
