@@ -34,6 +34,9 @@ public class UserResponse implements Serializable {
   @JsonProperty(value = "role")
   UtemRoles role;
 
+  @JsonProperty(value = "rut")
+  String rut;
+
   public UserResponse toDto(UtemUser user) {
     this.id = user.getId();
     this.createdAt = user.getCreatedAt();
@@ -42,6 +45,7 @@ public class UserResponse implements Serializable {
     this.name = user.getName();
     this.lastName = user.getLastname();
     this.role = user.getRole();
+    this.rut = user.getRut();
     return this;
 
   }
