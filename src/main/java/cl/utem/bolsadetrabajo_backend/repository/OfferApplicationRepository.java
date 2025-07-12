@@ -13,5 +13,5 @@ public interface OfferApplicationRepository extends JpaRepository<OfferApplicati
   Page<OfferApplication> findAllByUser(UtemUser user, Pageable pageable);
   Page<OfferApplication> findAllByOffer_OfferAuthor_Company(Company offerOfferAuthorCompany, Pageable pageable);
   Optional<OfferApplication> getOfferApplicationByOfferIdAndUserId(Long offerId, Long userId);
-
+  Page<OfferApplication> findAllByOfferId(Long offerId, Pageable pageable);
 }

@@ -132,11 +132,8 @@ public class OfferServiceApiImpl implements OfferService {
       throw new ValidationException("invalid company: user does not have company");
     }
 
-    UtemUser offerAuthor = utemUserRepository.findById(req.getOfferAuthorId())
-        .orElseThrow(() -> new CustomEntityNotFoundException("Offer author not found"));
-
     // Validations
-    if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && offerAuthor.getCompany() != user.getCompany()) {
+    if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && user.getCompany() != user.getCompany()) {
       throw new ValidationException("invalid company: user does not share the same company as requested resource");
     }
 
@@ -153,7 +150,7 @@ public class OfferServiceApiImpl implements OfferService {
       offer.setWorkType(req.getWorkType());
       offer.setWorkMode(req.getWorkMode());
       offer.setOfferLocation(offerLocation);
-      offer.setOfferAuthor(offerAuthor);
+      offer.setOfferAuthor(user);
 
     return new OfferResponse().toDto(offerRepository.save(offer));
   }
@@ -174,4 +171,25 @@ public class OfferServiceApiImpl implements OfferService {
     offerRepository.delete(offer);
     return new OfferResponse().toDto(offer);
   }
+
+  @Override
+  public Page<OfferApplicationDto> getOfferApplications(Authentication auth, Long offerId, PaginationQueriesDto queries) {
+    // Get User from Authentication
+    UtemUser user = contextUtils.getUserFromContext(auth);
+
+    Offer offer = offerRepository.findById(offerId)
+        .orElseThrow(() -> new CustomEntityNotFoundException("Offer not found"));
+
+    // Validate if user is authorized to view the offer applications
+    if (user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && offer.getOfferAuthor().getCompany() != user.getCompany() ) {
+      throw new ValidationException("Access denied: User is not authorized to view this offer applications");
+    }
+
+    Pageable pageable = PageUtils.getPageable(queries);
+    Page<OfferApplication> offerApplications = offerApplicationRepository.findAllByOfferId(offerId, pageable);
+
+    return offerApplications.map(offerApplication -> new OfferApplicationDto().toDto(offerApplication));
+
+  }
+
 }

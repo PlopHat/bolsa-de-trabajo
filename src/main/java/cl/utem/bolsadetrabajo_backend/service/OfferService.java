@@ -19,4 +19,5 @@ public interface OfferService {
   public OfferResponse createOffer(Authentication auth, OfferRequestDto req);
   public OfferResponse deleteOffer(Authentication auth, Long id);
 
+  public Page<OfferApplicationDto> getOfferApplications(Authentication auth, Long offerId, PaginationQueriesDto queries);
 }

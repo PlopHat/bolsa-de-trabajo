@@ -2,6 +2,7 @@ package cl.utem.bolsadetrabajo_backend.api.controller;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.request.OfferRequestDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.request.PaginationQueriesDto;
+import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferApplicationDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferResponse;
 import cl.utem.bolsadetrabajo_backend.service.OfferService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -99,14 +99,13 @@ public class OfferController {
   @PreAuthorize(value =
           "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
           "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
-  public ResponseEntity<Page<OfferResponse>> getOfferApplications(
+  public ResponseEntity<Page<OfferApplicationDto>> getOfferApplications(
           Authentication auth,
           @PathVariable("offerId") Long offerId,
           @ModelAttribute PaginationQueriesDto queryParams
   ) {
 
-    return null;
-    //return ResponseEntity.status(HttpStatus.OK).body(offerService.getOfferApplications(auth, offerId, queryParams));
+    return ResponseEntity.status(HttpStatus.OK).body(offerService.getOfferApplications(auth, offerId, queryParams));
   }
 
   @Operation(
@@ -136,14 +135,13 @@ public class OfferController {
           "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
           "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())"
   )
-  public ResponseEntity<OfferResponse> getOfferApplicationById(
+  public ResponseEntity<OfferApplicationDto> getOfferApplicationById(
           Authentication auth,
           @PathVariable("offerId") Long offerId,
           @PathVariable("userId") Long userId
   ) {
 
-    return null;
-    //return ResponseEntity.status(HttpStatus.OK).body(offerService.getOfferApplicationById(auth, offerId, userId));
+    return ResponseEntity.status(HttpStatus.OK).body(offerService.getOfferApplicationById(auth, offerId, userId));
   }
 
   @Operation(
@@ -167,7 +165,7 @@ public class OfferController {
           "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
   public ResponseEntity<OfferResponse> createOffer(
           Authentication auth,
-          @Valid @RequestBody OfferRequestDto request
+          @RequestBody OfferRequestDto request
   ) {
 
     return ResponseEntity.status(HttpStatus.CREATED).body(offerService.createOffer(auth, request));
