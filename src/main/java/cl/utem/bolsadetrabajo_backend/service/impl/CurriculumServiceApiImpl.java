@@ -27,18 +27,18 @@ public class CurriculumServiceApiImpl implements CurriculumService {
     UtemUser user = contextUtils.getUserFromContext(auth);
 
     Curriculum curriculum = new Curriculum();
-    curriculum.setUser(user);
-    curriculum.setSkills(request.getSkills());
-    curriculum.setFirstName(request.getFirstName());
-    curriculum.setLastName(request.getLastName());
-    curriculum.setEmail(request.getEmail());
-    curriculum.setPhoneNumber(request.getPhoneNumber());
-    curriculum.setAddress(request.getAddress());
-    curriculum.setEducation(request.getEducation());
-    curriculum.setExperience(request.getExperience());
-    curriculum.setCertifications(request.getCertifications());
-    curriculum.setLanguages(request.getLanguages());
-    curriculum.setReferences(request.getReferences());
+      curriculum.setUser(user);
+      curriculum.setSkills(request.getSkills());
+      curriculum.setFirstName(request.getFirstName());
+      curriculum.setLastName(request.getLastName());
+      curriculum.setEmail(request.getEmail());
+      curriculum.setPhoneNumber(request.getPhoneNumber());
+      curriculum.setAddress(request.getAddress());
+      curriculum.setEducation(request.getEducation());
+      curriculum.setExperience(request.getExperience());
+      curriculum.setCertifications(request.getCertifications());
+      curriculum.setLanguages(request.getLanguages());
+      curriculum.setReferences(request.getReferences());
 
     return new CurriculumResponseDto().toDto(curriculumRepository.save(curriculum));
   }

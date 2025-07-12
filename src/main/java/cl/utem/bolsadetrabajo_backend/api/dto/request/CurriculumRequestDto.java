@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * DTO for {@link cl.utem.bolsadetrabajo_backend.domain.entity.Curriculum}
@@ -14,15 +13,6 @@ public class CurriculumRequestDto implements Serializable {
 
   @JsonProperty(value = "id")
   Long id;
-
-  @JsonProperty(value = "createdAt")
-  LocalDateTime createdAt;
-
-  @JsonProperty(value = "updatedAt")
-  LocalDateTime updatedAt;
-
-  @JsonProperty(value = "user")
-  UserRequest user;
 
   @JsonProperty(value = "firstName")
   String firstName;
