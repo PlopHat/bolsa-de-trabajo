@@ -2,13 +2,16 @@ package cl.utem.bolsadetrabajo_backend.service.impl;
 
 import cl.utem.bolsadetrabajo_backend.api.dto.request.OfferRequestDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.request.PaginationQueriesDto;
+import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferApplicationDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferResponse;
 import cl.utem.bolsadetrabajo_backend.domain.entity.Offer;
+import cl.utem.bolsadetrabajo_backend.domain.entity.OfferApplication;
 import cl.utem.bolsadetrabajo_backend.domain.entity.OfferLocation;
 import cl.utem.bolsadetrabajo_backend.domain.entity.UtemUser;
 import cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles;
 import cl.utem.bolsadetrabajo_backend.domain.exception.types.CustomEntityNotFoundException;
 import cl.utem.bolsadetrabajo_backend.domain.exception.types.ValidationException;
+import cl.utem.bolsadetrabajo_backend.repository.OfferApplicationRepository;
 import cl.utem.bolsadetrabajo_backend.repository.OfferLocationRepository;
 import cl.utem.bolsadetrabajo_backend.repository.OfferRepository;
 import cl.utem.bolsadetrabajo_backend.repository.UtemUserRepository;
@@ -34,6 +37,8 @@ public class OfferServiceApiImpl implements OfferService {
   private ContextUtils contextUtils;
   @Autowired
   private OfferLocationRepository offerLocationRepository;
+  @Autowired
+  private OfferApplicationRepository offerApplicationRepository;
 
   @Override
   public Page<OfferResponse> getOffers(Authentication auth, PaginationQueriesDto queries) {
@@ -53,6 +58,23 @@ public class OfferServiceApiImpl implements OfferService {
     Offer offer = offerRepository.findById(id).orElseThrow(CustomEntityNotFoundException::new);
     // Logic
     return new OfferResponse().toDto(offer);
+  }
+
+  @Override
+  public OfferApplicationDto getOfferApplicationById(Authentication auth, Long offerId, Long userId) {
+    // Get User from Authentication
+    UtemUser user = contextUtils.getUserFromContext(auth);
+
+    // Validate if user is authorized to view the offer application
+    if (user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && !user.getId().equals(userId)) {
+      throw new ValidationException("Access denied: User is not authorized to view this offer application");
+    }
+
+    // Fetch the offer application by offerId and userId
+    OfferApplication offerApplication = offerApplicationRepository.getOfferApplicationByOfferIdAndUserId(offerId, userId)
+        .orElseThrow(() -> new CustomEntityNotFoundException("Offer application not found"));
+
+    return new OfferApplicationDto().toDto(offerApplication);
   }
 
   @Override
@@ -110,11 +132,8 @@ public class OfferServiceApiImpl implements OfferService {
       throw new ValidationException("invalid company: user does not have company");
     }
 
-    UtemUser offerAuthor = utemUserRepository.findById(req.getOfferAuthorId())
-        .orElseThrow(() -> new CustomEntityNotFoundException("Offer author not found"));
-
     // Validations
-    if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && offerAuthor.getCompany() != user.getCompany()) {
+    if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && user.getCompany() != user.getCompany()) {
       throw new ValidationException("invalid company: user does not share the same company as requested resource");
     }
 
@@ -131,7 +150,7 @@ public class OfferServiceApiImpl implements OfferService {
       offer.setWorkType(req.getWorkType());
       offer.setWorkMode(req.getWorkMode());
       offer.setOfferLocation(offerLocation);
-      offer.setOfferAuthor(offerAuthor);
+      offer.setOfferAuthor(user);
 
     return new OfferResponse().toDto(offerRepository.save(offer));
   }
@@ -152,4 +171,25 @@ public class OfferServiceApiImpl implements OfferService {
     offerRepository.delete(offer);
     return new OfferResponse().toDto(offer);
   }
+
+  @Override
+  public Page<OfferApplicationDto> getOfferApplications(Authentication auth, Long offerId, PaginationQueriesDto queries) {
+    // Get User from Authentication
+    UtemUser user = contextUtils.getUserFromContext(auth);
+
+    Offer offer = offerRepository.findById(offerId)
+        .orElseThrow(() -> new CustomEntityNotFoundException("Offer not found"));
+
+    // Validate if user is authorized to view the offer applications
+    if (user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && offer.getOfferAuthor().getCompany() != user.getCompany() ) {
+      throw new ValidationException("Access denied: User is not authorized to view this offer applications");
+    }
+
+    Pageable pageable = PageUtils.getPageable(queries);
+    Page<OfferApplication> offerApplications = offerApplicationRepository.findAllByOfferId(offerId, pageable);
+
+    return offerApplications.map(offerApplication -> new OfferApplicationDto().toDto(offerApplication));
+
+  }
+
 }

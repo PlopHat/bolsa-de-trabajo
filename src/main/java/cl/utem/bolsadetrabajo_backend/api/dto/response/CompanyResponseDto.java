@@ -11,25 +11,22 @@ import java.time.LocalDateTime;
  * DTO for {@link cl.utem.bolsadetrabajo_backend.domain.entity.Company}
  */
 @Data
-public class CompanyDto implements Serializable {
-  @JsonProperty(value = "rut")
-  int rut;
+public class CompanyResponseDto implements Serializable {
 
-  @JsonProperty(value = "DV")
-  String DV;
+  @JsonProperty(value = "rut")
+  private String rut; // Formato: 12.345.678-9
 
   @JsonProperty(value = "fantasyName")
-  String fantasyName;
+  private String fantasyName;
 
   @JsonProperty(value = "createdAt")
-  LocalDateTime createdAt;
+  private LocalDateTime createdAt;
 
   @JsonProperty(value = "updatedAt")
-  LocalDateTime updatedAt;
+  private LocalDateTime updatedAt;
 
-  public CompanyDto toDto(Company company) {
+  public CompanyResponseDto toDto(Company company) {
     this.rut = company.getRut();
-    this.DV = company.getDV();
     this.fantasyName = company.getFantasyName();
     this.createdAt = company.getCreatedAt();
     this.updatedAt = company.getUpdatedAt();

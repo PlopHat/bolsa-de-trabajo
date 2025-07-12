@@ -52,13 +52,13 @@ public class UserRequest implements Serializable {
   )
   private String lastName;
 
-  @JsonProperty(value = "companyId")
+  @JsonProperty(value = "companyRut")
   @Schema(
-          description = "ID de la empresa asociada al usuario",
-          example = "1",
+          description = "Rut de la empresa asociada al usuario",
+          example = "99999999-9",
           requiredMode = Schema.RequiredMode.NOT_REQUIRED
   )
-  private Long companyId;
+  private String companyRut;
 
   @JsonProperty(value = "role")
   @Schema(

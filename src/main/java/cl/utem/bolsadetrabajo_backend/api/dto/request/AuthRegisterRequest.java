@@ -47,9 +47,9 @@ public class AuthRegisterRequest {
   @NotNull(message = "RUT must not be null")
   @Schema(
       description = "RUT del usuario sin DV",
-      example = "12345678",
+      example = "12345678-9",
       requiredMode = Schema.RequiredMode.REQUIRED
   )
-  private int rut;
+  private String rut;
 
 }
