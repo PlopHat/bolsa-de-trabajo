@@ -57,6 +57,7 @@ public class UserServiceApiImpl implements UserService {
     if(company != null) {
       user.setCompany(company);
     }
+    user.setRut(req.getRut());
 
     UtemUser savedUser = userRepository.save(user);
 
