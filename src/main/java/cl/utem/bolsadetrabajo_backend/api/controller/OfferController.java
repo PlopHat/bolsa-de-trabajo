@@ -195,4 +195,17 @@ public class OfferController {
 
     return ResponseEntity.status(HttpStatus.OK).body(offerService.updateOffer(auth, id, request));
   }
+
+  @DeleteMapping(value = "{id}")
+  @PreAuthorize
+  (value =
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasRole(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
+  public ResponseEntity<OfferResponse> deleteOffer(
+          Authentication auth,
+          @PathVariable(value = "id") Long id
+  ) {
+
+    return ResponseEntity.status(HttpStatus.OK).body(offerService.deleteOffer(auth, id));
+  }
 }

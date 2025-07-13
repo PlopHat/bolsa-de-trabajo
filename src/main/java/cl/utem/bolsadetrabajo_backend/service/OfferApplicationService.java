@@ -6,8 +6,6 @@ import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferApplicationDto;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 
-import java.lang.reflect.Type;
-
 public interface OfferApplicationService {
 
   public Page<OfferApplicationDto> getOffersApplications(Authentication auth, PaginationQueriesDto queries);
@@ -16,5 +14,5 @@ public interface OfferApplicationService {
 
   public OfferApplicationDto updateOfferApplication(Authentication auth, OfferApplicationRequest request, Long id);
 
-  public Type deleteRequest(Authentication auth, Long id) throws Exception;
+  public OfferApplicationDto deleteRequest(Authentication auth, Long offerId);
 }
