@@ -5,6 +5,7 @@ import cl.utem.bolsadetrabajo_backend.api.dto.response.CurriculumResponseDto;
 import cl.utem.bolsadetrabajo_backend.domain.entity.Curriculum;
 import cl.utem.bolsadetrabajo_backend.domain.entity.UtemUser;
 import cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles;
+import cl.utem.bolsadetrabajo_backend.domain.exception.types.ValidationException;
 import cl.utem.bolsadetrabajo_backend.repository.CurriculumRepository;
 import cl.utem.bolsadetrabajo_backend.service.CurriculumService;
 import cl.utem.bolsadetrabajo_backend.utils.ContextUtils;
@@ -47,12 +48,12 @@ public class CurriculumServiceApiImpl implements CurriculumService {
   public CurriculumResponseDto getCurriculumByUserId(Authentication auth, Long userId) {
     UtemUser user = contextUtils.getUserFromContext(auth);
 
-    if (!user.getId().equals(userId) || user.getRole() != UtemRoles.ROLE_ADMINISTRATOR) {
-      throw new IllegalArgumentException("You can only access your own curriculum.");
+    if (!user.getId().equals(userId) && user.getRole() != UtemRoles.ROLE_ADMINISTRATOR) {
+      throw new ValidationException("You can only access your own curriculum.");
     }
 
     Curriculum curriculum = curriculumRepository.findById(userId)
-        .orElseThrow(() -> new IllegalArgumentException("Curriculum not found for user ID: " + userId));
+        .orElseThrow(() -> new ValidationException("Curriculum not found for user ID: " + userId));
 
     return new CurriculumResponseDto().toDto(curriculum);
   }
