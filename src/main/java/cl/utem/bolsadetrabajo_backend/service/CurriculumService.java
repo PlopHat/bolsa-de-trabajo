@@ -7,5 +7,8 @@ import org.springframework.security.core.Authentication;
 public interface CurriculumService {
 
   public CurriculumResponseDto createCurriculum(Authentication auth, CurriculumRequestDto request);
-  public CurriculumResponseDto getCurriculumByUserId(Authentication auth, Long userId);
+
+  CurriculumResponseDto editCurriculum(Authentication auth, CurriculumRequestDto request);
+
+  public CurriculumResponseDto getCurriculumByUserRut(Authentication auth, String rut);
 }

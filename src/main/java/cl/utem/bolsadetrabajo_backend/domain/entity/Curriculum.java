@@ -44,7 +44,7 @@ public class Curriculum extends BaseEntity {
   @Column(name = "languages", nullable = true)
   private String languages;
 
-  @Column(name = "references", nullable = true)
-  private String references;
+  @Column(name = "referals", nullable = true)
+  private String referals;
 
 }

@@ -17,15 +17,15 @@ public class CurriculumController {
   @Autowired
   private CurriculumService curriculumService;
 
-  @GetMapping(value = "{id}")
+  @GetMapping(value = "{rut}")
   @PreAuthorize(value =
           "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
           "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
           "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
-  public ResponseEntity<CurriculumResponseDto> getCurriculumByUserId(Authentication auth,
-                                                                     @PathVariable("id") Long userId) {
+  public ResponseEntity<CurriculumResponseDto> getCurriculumByUserRut(Authentication auth,
+                                                                     @PathVariable("rut") String rut) {
 
-    return ResponseEntity.status(HttpStatus.OK).body(curriculumService.getCurriculumByUserId(auth, userId));
+    return ResponseEntity.status(HttpStatus.OK).body(curriculumService.getCurriculumByUserRut(auth, rut));
   }
 
   @PostMapping(value = "")

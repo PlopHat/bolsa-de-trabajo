@@ -55,8 +55,8 @@ public class CurriculumResponseDto implements Serializable {
   @JsonProperty(value = "languages")
   private String languages;
 
-  @JsonProperty(value = "references")
-  private String references;
+  @JsonProperty(value = "referals")
+  private String referals;
 
   public CurriculumResponseDto toDto(Curriculum cv) {
     this.id = cv.getId();
@@ -72,7 +72,7 @@ public class CurriculumResponseDto implements Serializable {
     this.skills = cv.getSkills();
     this.certifications = cv.getCertifications();
     this.languages = cv.getLanguages();
-    this.references = cv.getReferences();
+    this.referals = cv.getReferals();
     this.user = new UserResponse().toDto(cv.getUser());
 
     return this;

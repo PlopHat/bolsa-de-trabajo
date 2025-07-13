@@ -4,7 +4,6 @@ import cl.utem.bolsadetrabajo_backend.api.dto.request.CurriculumRequestDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.CurriculumResponseDto;
 import cl.utem.bolsadetrabajo_backend.domain.entity.Curriculum;
 import cl.utem.bolsadetrabajo_backend.domain.entity.UtemUser;
-import cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles;
 import cl.utem.bolsadetrabajo_backend.domain.exception.types.ValidationException;
 import cl.utem.bolsadetrabajo_backend.repository.CurriculumRepository;
 import cl.utem.bolsadetrabajo_backend.service.CurriculumService;
@@ -39,21 +38,39 @@ public class CurriculumServiceApiImpl implements CurriculumService {
       curriculum.setExperience(request.getExperience());
       curriculum.setCertifications(request.getCertifications());
       curriculum.setLanguages(request.getLanguages());
-      curriculum.setReferences(request.getReferences());
+      curriculum.setReferals(request.getReferals());
 
     return new CurriculumResponseDto().toDto(curriculumRepository.save(curriculum));
   }
 
   @Override
-  public CurriculumResponseDto getCurriculumByUserId(Authentication auth, Long userId) {
+  public CurriculumResponseDto editCurriculum(Authentication auth, CurriculumRequestDto request) {
     UtemUser user = contextUtils.getUserFromContext(auth);
 
-    if (!user.getId().equals(userId) && user.getRole() != UtemRoles.ROLE_ADMINISTRATOR) {
-      throw new ValidationException("You can only access your own curriculum.");
-    }
+    Curriculum curriculum = curriculumRepository.findCurriculumByUser(user)
+        .orElseThrow(() -> new ValidationException("Curriculum not found for user ID: " + user.getId()));
 
-    Curriculum curriculum = curriculumRepository.findById(userId)
-        .orElseThrow(() -> new ValidationException("Curriculum not found for user ID: " + userId));
+      curriculum.setSkills(request.getSkills());
+      curriculum.setFirstName(request.getFirstName());
+      curriculum.setLastName(request.getLastName());
+      curriculum.setEmail(request.getEmail());
+      curriculum.setPhoneNumber(request.getPhoneNumber());
+      curriculum.setAddress(request.getAddress());
+      curriculum.setEducation(request.getEducation());
+      curriculum.setExperience(request.getExperience());
+      curriculum.setCertifications(request.getCertifications());
+      curriculum.setLanguages(request.getLanguages());
+      curriculum.setReferals(request.getReferals());
+
+    return new CurriculumResponseDto().toDto(curriculumRepository.save(curriculum));
+  }
+
+  @Override
+  public CurriculumResponseDto getCurriculumByUserRut(Authentication auth, String rut) {
+    UtemUser user = contextUtils.getUserFromContext(auth);
+
+    Curriculum curriculum = curriculumRepository.findCurriculumByUser_Rut(rut)
+        .orElseThrow(() -> new ValidationException("Curriculum not found for user rut: " + rut));
 
     return new CurriculumResponseDto().toDto(curriculum);
   }

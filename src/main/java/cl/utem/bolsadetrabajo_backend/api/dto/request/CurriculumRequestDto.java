@@ -3,13 +3,11 @@ package cl.utem.bolsadetrabajo_backend.api.dto.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.io.Serializable;
-
 /**
  * DTO for {@link cl.utem.bolsadetrabajo_backend.domain.entity.Curriculum}
  */
 @Data
-public class CurriculumRequestDto implements Serializable {
+public class CurriculumRequestDto {
 
   @JsonProperty(value = "id")
   Long id;
@@ -44,7 +42,7 @@ public class CurriculumRequestDto implements Serializable {
   @JsonProperty(value = "languages")
   String languages;
 
-  @JsonProperty(value = "references")
-  String references;
+  @JsonProperty(value = "referals")
+  String referals;
 
 }
