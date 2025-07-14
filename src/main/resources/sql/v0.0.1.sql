@@ -217,3 +217,5 @@ $function$
 
 alter table curriculums
     alter column experience type text;
+
+ALTER TABLE bdt_offers ALTER COLUMN offer_location DROP NOT NULL;

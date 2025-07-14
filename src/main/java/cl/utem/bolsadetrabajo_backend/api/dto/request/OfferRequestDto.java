@@ -41,10 +41,6 @@ public class OfferRequestDto {
   @NotNull
   WorkMode workMode;
 
-  @JsonProperty(value = "offerLocationId")
-  @NotNull
-  Long offerLocationId;
-
   @JsonProperty(value = "offerAuthorId")
   @NotNull
   Long offerAuthorId;

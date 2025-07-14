@@ -39,4 +39,16 @@ public class CurriculumController {
     return ResponseEntity.status(HttpStatus.CREATED).body(curriculumService.createCurriculum(auth, request));
   }
 
+  @PutMapping(value = "{rut}")
+  @PreAuthorize(value =
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name())")
+  public ResponseEntity<CurriculumResponseDto> editCurriculum(Authentication auth,
+                                                               @PathVariable("rut") String rut,
+                                                               @RequestBody
+                                                               CurriculumRequestDto request) {
+    return ResponseEntity.status(HttpStatus.OK)
+            .body(curriculumService.editCurriculum(auth, request));
+
+  }
 }

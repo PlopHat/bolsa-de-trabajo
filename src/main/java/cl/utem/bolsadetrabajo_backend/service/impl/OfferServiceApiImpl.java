@@ -6,7 +6,6 @@ import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferApplicationDto;
 import cl.utem.bolsadetrabajo_backend.api.dto.response.OfferResponse;
 import cl.utem.bolsadetrabajo_backend.domain.entity.Offer;
 import cl.utem.bolsadetrabajo_backend.domain.entity.OfferApplication;
-import cl.utem.bolsadetrabajo_backend.domain.entity.OfferLocation;
 import cl.utem.bolsadetrabajo_backend.domain.entity.UtemUser;
 import cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles;
 import cl.utem.bolsadetrabajo_backend.domain.exception.types.CustomEntityNotFoundException;
@@ -85,8 +84,6 @@ public class OfferServiceApiImpl implements OfferService {
         .orElseThrow(() -> new CustomEntityNotFoundException("Offer not found"));
     UtemUser offerAuthor = utemUserRepository.findById(req.getOfferAuthorId())
             .orElseThrow(() -> new CustomEntityNotFoundException("Offer author not found"));
-    OfferLocation offerLocation = offerLocationRepository.findById(req.getOfferLocationId())
-            .orElse(null);
 
     // Validations
     if(user.getRole() != UtemRoles.ROLE_ADMINISTRATOR && user.getCompany() != offerAuthor.getCompany()) {
@@ -115,9 +112,6 @@ public class OfferServiceApiImpl implements OfferService {
     if(req.getWorkMode() != null) {
       offer.setWorkMode(req.getWorkMode());
     }
-    if(req.getOfferLocationId() != null) {
-      offer.setOfferLocation(offerLocation);
-    }
     // Save and return
 
     return new OfferResponse().toDto(offerRepository.save(offer));
@@ -137,9 +131,6 @@ public class OfferServiceApiImpl implements OfferService {
       throw new ValidationException("invalid company: user does not share the same company as requested resource");
     }
 
-    OfferLocation offerLocation = offerLocationRepository.findById(req.getOfferLocationId())
-        .orElseThrow(() -> new CustomEntityNotFoundException("Location not found"));
-
     // Logic
     Offer offer = new Offer();
       offer.setOfferName(req.getOfferName());
@@ -149,7 +140,6 @@ public class OfferServiceApiImpl implements OfferService {
       offer.setSalary(req.getSalary());
       offer.setWorkType(req.getWorkType());
       offer.setWorkMode(req.getWorkMode());
-      offer.setOfferLocation(offerLocation);
       offer.setOfferAuthor(user);
 
     return new OfferResponse().toDto(offerRepository.save(offer));
@@ -189,7 +179,6 @@ public class OfferServiceApiImpl implements OfferService {
     Page<OfferApplication> offerApplications = offerApplicationRepository.findAllByOfferId(offerId, pageable);
 
     return offerApplications.map(offerApplication -> new OfferApplicationDto().toDto(offerApplication));
-
   }
 
 }

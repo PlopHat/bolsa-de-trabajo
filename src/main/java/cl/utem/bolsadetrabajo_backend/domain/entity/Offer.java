@@ -41,7 +41,7 @@ public class Offer extends BaseEntity {
   private WorkMode workMode;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "offer_location", nullable = false)
+  @JoinColumn(name = "offer_location", nullable = true)
   private OfferLocation offerLocation;
 
   @ManyToOne(fetch = FetchType.LAZY)
