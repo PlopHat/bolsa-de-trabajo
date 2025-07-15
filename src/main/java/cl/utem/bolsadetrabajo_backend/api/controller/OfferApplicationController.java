@@ -182,7 +182,8 @@ public class OfferApplicationController {
   @PutMapping(value = "{id}")
   @PreAuthorize(value =
           "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_USER.name()) or " +
-          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name())")
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_ADMINISTRATOR.name()) or " +
+          "hasAuthority(T(cl.utem.bolsadetrabajo_backend.domain.entity.enums.UtemRoles).ROLE_COMPANY.name())")
   public ResponseEntity<OfferApplicationDto> updateOfferApplication(
           Authentication auth,
           @PathVariable(value = "id") Long id,
