@@ -9,6 +9,7 @@ import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -47,5 +48,8 @@ public class Offer extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "offer_author")
   private UtemUser offerAuthor;
+
+  @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<OfferApplication> offerApplications;
 
 }
