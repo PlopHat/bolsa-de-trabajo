@@ -64,5 +64,13 @@ public class UserServiceApiImpl implements UserService {
     return new UserResponse().toDto(savedUser);
   }
 
+  @Override
+  public UserResponse deleteUserById(Long id) {
+    UtemUser user = userRepository.getUserById(id);
+    userRepository.delete(user);
+    return new UserResponse().toDto(user);
+  }
+
+
 
 }

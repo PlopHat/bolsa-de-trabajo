@@ -14,4 +14,5 @@ public interface UserService {
   public UserResponse getUserById(Long id);
   public UserResponse createUser(Authentication auth, UserRequest req);
 
+  public UserResponse deleteUserById(Long id);
 }
