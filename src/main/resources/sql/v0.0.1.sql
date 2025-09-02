@@ -221,3 +221,5 @@ alter table curriculums
 ALTER TABLE bdt_offers ALTER COLUMN offer_location DROP NOT NULL;
 
 ALTER TABLE curriculums RENAME COLUMN referrals TO referals;
+
+ALTER TYPE worktype ADD VALUE 'HYBRID';
