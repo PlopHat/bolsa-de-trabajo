@@ -13,4 +13,6 @@ public interface CompanyService {
   CompanyResponseDto getCompany(Authentication auth, String rut);
 
   CompanyResponseDto createCompany(Authentication auth, @Valid CompanyRequestDto req);
+
+    CompanyResponseDto deleteCompany(String id);
 }

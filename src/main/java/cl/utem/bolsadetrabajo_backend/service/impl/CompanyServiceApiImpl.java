@@ -46,4 +46,11 @@ public class CompanyServiceApiImpl implements CompanyService {
     return new CompanyResponseDto().toDto(companyRepository.save(company));
   }
 
+  @Override
+    public CompanyResponseDto deleteCompany(String rut) {
+        Company company = companyRepository.getCompanyByRut(rut);
+        companyRepository.delete(company);
+        return new CompanyResponseDto().toDto(company);
+    }
+
 }
