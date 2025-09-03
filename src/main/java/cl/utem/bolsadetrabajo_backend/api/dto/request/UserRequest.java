@@ -68,4 +68,13 @@ public class UserRequest implements Serializable {
           allowableValues = {"ROLE_USER", "ROLE_ADMINISTRATOR", "ROLE_COMPANY"}
   )
   private UtemRoles role;
+
+  @JsonProperty(value = "rut")
+  @Schema(
+          description = "Rut",
+          example = "99.999.999-9",
+          requiredMode = Schema.RequiredMode.REQUIRED
+  )
+  private String rut;
+
 }

@@ -57,11 +57,20 @@ public class UserServiceApiImpl implements UserService {
     if(company != null) {
       user.setCompany(company);
     }
+    user.setRut(req.getRut());
 
     UtemUser savedUser = userRepository.save(user);
 
     return new UserResponse().toDto(savedUser);
   }
+
+  @Override
+  public UserResponse deleteUserById(Long id) {
+    UtemUser user = userRepository.getUserById(id);
+    userRepository.delete(user);
+    return new UserResponse().toDto(user);
+  }
+
 
 
 }

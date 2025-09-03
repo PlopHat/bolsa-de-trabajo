@@ -5,8 +5,11 @@ import cl.utem.bolsadetrabajo_backend.domain.exception.types.ValidationException
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
@@ -14,7 +17,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -65,6 +67,13 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ProblemDetail> handleBadCredentialsException(HttpServletRequest req, BadCredentialsException ex) {
     log.error("Error capturado <BadCredentialsException> : ", ex);
     ProblemDetail problemDetail = makeServletRequestProblemDetail(req, HttpStatus.BAD_REQUEST, ex);
+    return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
+  }
+
+  @ExceptionHandler(InsufficientAuthenticationException.class)
+  public ResponseEntity<ProblemDetail> handleInsufficientAuthenticationException(HttpServletRequest req, InsufficientAuthenticationException ex) {
+    log.error("Error capturado <InsufficientAuthenticationException> : ", ex);
+    ProblemDetail problemDetail = makeServletRequestProblemDetail(req, HttpStatus.UNAUTHORIZED, ex);
     return ResponseEntity.status(problemDetail.getStatus()).body(problemDetail);
   }
 

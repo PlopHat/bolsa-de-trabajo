@@ -10,6 +10,8 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -34,6 +36,15 @@ public class UtemUser extends BaseEntity {
   @Enumerated(EnumType.STRING)
   @JdbcType(PostgreSQLEnumJdbcType.class)
   private UtemRoles role;
+
+  @OneToMany(mappedBy = "offerAuthor", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Offer> offers;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<OfferApplication> applications;
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Curriculum> curriculums;
 
   @Column(name = "rut", nullable = false, unique = true, length = 10)
   private String rut;

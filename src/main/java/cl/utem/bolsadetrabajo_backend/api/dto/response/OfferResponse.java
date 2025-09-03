@@ -44,9 +44,6 @@ public class OfferResponse implements Serializable {
   @JsonProperty(value = "workMode")
   WorkMode workMode;
 
-  @JsonProperty(value = "offerLocation")
-  OfferLocationDto offerLocation;
-
   @JsonProperty(value = "offerAuthor")
   UserResponse offerAuthor;
 
@@ -61,7 +58,6 @@ public class OfferResponse implements Serializable {
     this.salary = offer.getSalary();
     this.workType = offer.getWorkType();
     this.workMode = offer.getWorkMode();
-    this.offerLocation = new OfferLocationDto().toDto(offer.getOfferLocation());
     this.offerAuthor = new UserResponse().toDto(offer.getOfferAuthor());
     return this;
   }

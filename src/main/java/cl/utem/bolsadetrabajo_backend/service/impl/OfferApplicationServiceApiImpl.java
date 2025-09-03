@@ -21,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 
 @Service
@@ -70,8 +69,14 @@ public class OfferApplicationServiceApiImpl implements OfferApplicationService {
     UtemUser user = contextUtils.getUserFromContext(auth);
     // Validations
 
-    // Handle null using exception
-    Offer offer = offerRepository.findById(request.getOfferId()).orElse(null);
+    OfferApplication existingApplication = offerApplicationRepository.findByUserAndOffer_Id(user, request.getOfferId());
+
+    if( existingApplication != null ) {
+      throw new ValidationException("Application already exists");
+    }
+
+    Offer offer = offerRepository.findById(request.getOfferId())
+            .orElseThrow(() -> new CustomEntityNotFoundException("Offer not found with id: " + request.getOfferId()));
 
     OfferApplication offerApplication = new OfferApplication();
     // Get user from context when context is available
@@ -98,21 +103,21 @@ public class OfferApplicationServiceApiImpl implements OfferApplicationService {
   }
 
   @Override
-  public Type deleteRequest(Authentication auth, Long id) throws Exception {
+  public OfferApplicationDto deleteRequest(Authentication auth, Long offerId) {
+
+    UtemUser user = contextUtils.getUserFromContext(auth);
 
     // Validations
 
-    OfferApplication offerApplication = offerApplicationRepository.findById(id).orElse(null);
-
-    if (offerApplication != null) {
-      offerApplicationRepository.delete(offerApplication);
-    } else {
-
-      // handle null 'NotFoundException'
-      throw new Exception();
+    OfferApplication offerApplication = offerApplicationRepository.findByUserAndOffer_Id(user, offerId);
+    if (offerApplication == null) {
+      throw new CustomEntityNotFoundException("Offer application not found for user with id: " + user.getId() + " and offer id: " + offerId);
     }
 
-    return null;
-  }
+    // logic
+    offerApplicationRepository.delete(offerApplication);
 
+    return new OfferApplicationDto().toDto(offerApplication);
+
+  }
 }
